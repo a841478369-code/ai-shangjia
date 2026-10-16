@@ -2,605 +2,635 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>爱尚佳千平超市 · 一人+AI矩阵全链路执行规划看板 (Gemini云端联动版)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>爱尚佳千平超市 V4.0 · 远程先行 + 全品类小程序 + 美团洗客 + 第三方骑手全链路看板</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Microsoft YaHei", "PingFang SC", sans-serif;
-      background-color: #0f172a;
+      background-color: #0b1120;
       color: #f8fafc;
     }
-    .node-card {
-      transition: all 0.22s ease;
-    }
-    .node-card:hover {
-      transform: translateY(-2px);
-    }
+    .node-card { transition: all 0.2s ease; }
+    .node-card:hover { transform: translateY(-2px); }
     .node-done {
-      border-color: rgba(16, 185, 129, 0.5) !important;
-      background: linear-gradient(135deg, rgba(6, 78, 59, 0.28), rgba(15, 23, 42, 0.9)) !important;
+      border-color: rgba(16, 185, 129, 0.55) !important;
+      background: linear-gradient(135deg, rgba(6, 78, 59, 0.35), rgba(15, 23, 42, 0.95)) !important;
     }
-    .flow-box {
-      transition: all 0.2s ease;
-      cursor: pointer;
+    .org-card { transition: all 0.18s ease; cursor: pointer; }
+    .org-card:hover { transform: scale(1.02); box-shadow: 0 0 18px rgba(56, 189, 248, 0.25); }
+    .pulse-dot { animation: pulse 2s infinite; }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
     }
-    .flow-box:hover {
-      transform: scale(1.03);
-      box-shadow: 0 0 20px rgba(56, 189, 248, 0.25);
-    }
-    ::-webkit-scrollbar { width: 8px; height: 8px; }
-    ::-webkit-scrollbar-track { background: #0f172a; }
-    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
   </style>
 </head>
-<body class="min-h-screen pb-20">
+<body class="min-h-screen pb-24">
 
-  <!-- 顶部 Sticky 全局状态与云端同步栏 -->
-  <header class="sticky top-0 z-50 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 shadow-xl">
-    <div class="max-w-7xl mx-auto px-4 py-3.5">
-      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
-        <!-- 左侧标题 -->
+  <!-- 顶部 Sticky 导航与进度栏 -->
+  <header class="sticky top-0 z-50 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 shadow-2xl">
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 py-3">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2.5">
         <div>
-          <div class="flex items-center gap-2.5">
-            <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-              Gemini 4.0 全局架构
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="px-2.5 py-0.5 text-xs font-extrabold rounded-full bg-rose-500/20 text-rose-300 border border-rose-400/40">
+              🔥 V4.0 实战定稿版 (远程先行 + 全品类 + 第三方骑手)
             </span>
-            <h1 class="text-xl md:text-2xl font-extrabold tracking-tight text-white">
-              🏪 爱尚佳千平超市 · “一人 + AI 矩阵”全链路执行规划图
+            <h1 class="text-base sm:text-xl font-extrabold tracking-tight text-white">
+              🏪 爱尚佳千平超市 · AI大领导总领 × 全品类0扣点小程序 × 公域洗客看板
             </h1>
           </div>
-          <p class="text-xs text-slate-400 mt-1">
-            本地路径：<code class="text-sky-400">file:///C:/Users/admin/Downloads/ai.html</code> ｜ 云端账本：Gemini NotebookLM【超市生存法则】+ GitHub 私有库
+          <p class="text-[11px] sm:text-xs text-slate-400 mt-1">
+            公网看板：<a href="https://a841478369-code.github.io/ai-shangjia/" class="text-sky-400 underline">https://a841478369-code.github.io/ai-shangjia/</a> ｜ 云端台账：NotebookLM【超市生存法则】
           </p>
         </div>
 
-        <!-- 右侧云端操作按钮组 -->
-        <div class="flex flex-wrap items-center gap-2">
-          <button onclick="copyCloudSyncCommand()" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white shadow flex items-center gap-1.5 transition">
-            <span>☁️ 复制云端同步口令 (发给Gemini)</span>
+        <div class="flex flex-wrap items-center gap-1.5">
+          <button onclick="copyCloudSyncCommand()" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white shadow transition">
+            ☁️ 复制同步口令 (汇报给AI大领导)
           </button>
-          <button onclick="exportProgressJSON()" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center gap-1 transition">
-            <span>💾 导出进度 JSON (存GitHub)</span>
+          <button onclick="exportProgressJSON()" class="px-2.5 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+            💾 导出进度
           </button>
-          <label class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center gap-1 cursor-pointer transition">
-            <span>📂 导入进度</span>
-            <input type="file" id="importFile" accept=".json" class="hidden" onchange="importProgressJSON(event)" />
+          <label class="px-2.5 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 cursor-pointer transition">
+            📂 导入进度
+            <input type="file" accept=".json" class="hidden" onchange="importProgressJSON(event)" />
           </label>
-          <button onclick="resetAllProgress()" class="px-2.5 py-1.5 text-xs font-medium rounded-lg bg-rose-950/60 hover:bg-rose-900/80 text-rose-300 border border-rose-800/50 transition">
+          <button onclick="resetAllProgress()" class="px-2 py-1.5 text-xs rounded-lg bg-rose-950/60 hover:bg-rose-900/80 text-rose-300 border border-rose-800/50 transition">
             重置
           </button>
         </div>
       </div>
 
-      <!-- 全局总进度条 + 角色工作量统计 -->
-      <div class="mt-3 pt-3 border-t border-slate-800/80 flex flex-col md:flex-row md:items-center justify-between gap-3">
+      <!-- 进度条 -->
+      <div class="mt-2.5 pt-2 border-t border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div class="flex-1">
           <div class="flex justify-between text-xs mb-1">
-            <span class="font-semibold text-emerald-400" id="progressText">已完成 0 / 18 个核心节点 (0%)</span>
-            <span class="text-slate-400" id="lastSavedText">状态实时自动保存在本地浏览器</span>
+            <span class="font-bold text-emerald-400" id="progressText">已完成 1 / 18 个核心节点 (6%)</span>
+            <span class="text-slate-400 text-[11px]" id="lastSavedText">当前处于【第一部分：接手前·远程先行期】</span>
           </div>
-          <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
-            <div id="progressBar" class="h-full bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-400 transition-all duration-300" style="width: 0%"></div>
+          <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+            <div id="progressBar" class="h-full bg-gradient-to-r from-indigo-500 via-emerald-400 to-sky-400 transition-all duration-300" style="width: 6%"></div>
           </div>
         </div>
-
-        <!-- 6大角色统计徽章 -->
-        <div class="flex flex-wrap gap-1.5 text-xs" id="roleStatsBar"></div>
       </div>
     </div>
   </header>
 
-  <main class="max-w-7xl mx-auto px-4 mt-6 space-y-6">
+  <main class="max-w-7xl mx-auto px-3 sm:px-4 mt-4 space-y-5">
 
-    <!-- 模块一：可视化全局人机协同架构图 -->
-    <section class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-lg">
-      <div class="flex items-center justify-between mb-4">
-        <div>
-          <h2 class="text-base md:text-lg font-bold text-white flex items-center gap-2">
-            <span>🗺️ 一、 “一人 + AI 矩阵”全局协同规划架构图</span>
-            <span class="text-xs font-normal text-slate-400">（点击下方任意角色卡片可一键筛选该角色的任务节点）</span>
-          </h2>
-        </div>
-        <button onclick="toggleArchDiagram()" id="toggleArchBtn" class="text-xs text-sky-400 hover:underline">收起架构图 ▲</button>
+    <!-- 模块零：AI大领导 (Gemini API) 数据管道与第三方运力实时状态监控灯 -->
+    <section class="bg-slate-900/95 border border-slate-800 rounded-2xl p-3.5 shadow-lg">
+      <div class="text-xs font-extrabold text-slate-300 mb-2.5 flex items-center justify-between">
+        <span>📡 AI 大领导 (Gemini API) 四大数据源与第三方运力监控回执面板</span>
+        <span class="text-[11px] text-sky-400 font-normal">解决“怎么知道Gemini收到了数据”——本地脚本读取后实时点亮回执</span>
       </div>
-
-      <div id="archDiagramBody" class="space-y-4">
-        <!-- 第一层：我本人 -->
-        <div class="flex justify-center">
-          <div onclick="setRoleFilter('me')" class="flow-box w-full md:w-2/3 lg:w-1/2 bg-gradient-to-r from-amber-500/20 via-amber-500/10 to-amber-500/20 border-2 border-amber-400/60 rounded-xl p-3.5 text-center">
-            <div class="text-sm font-extrabold text-amber-300">👤 我本人（千平超市主理人 / 唯一决策者）</div>
-            <div class="text-xs text-slate-300 mt-1">
-              只负责 4 件事：① 卖场黄金自提区落位 ｜ ② 思迅天店选 50 款爆品拍板价格 ｜ ③ 营业执照/微信支付资质 ｜ ④ 节点验收打勾 <code class="text-emerald-400">[✓]</code>
-            </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 text-xs">
+        <div class="bg-slate-800/80 border border-emerald-500/30 rounded-xl p-2.5 flex items-start gap-2.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 pulse-dot mt-1 shrink-0"></span>
+          <div>
+            <div class="font-bold text-white">🕷️ 3000+全品类爬虫库</div>
+            <div class="text-[11px] text-emerald-300 mt-0.5">远程先行就绪：待抓美团/饿了么/多多全品库</div>
           </div>
         </div>
-
-        <!-- 向下箭头 -->
-        <div class="flex justify-center text-slate-500 text-xs font-mono">
-          ▼ 下达需求 / 拍照喂图 / 复制同步口令 ▼
-        </div>
-
-        <!-- 第二层：Gemini 4.0 全局中枢 -->
-        <div class="flex justify-center">
-          <div onclick="setRoleFilter('gemini')" class="flow-box w-full md:w-3/4 lg:w-2/3 bg-gradient-to-r from-indigo-500/25 via-sky-500/15 to-indigo-500/25 border-2 border-sky-400/60 rounded-xl p-3.5 text-center">
-            <div class="text-sm font-extrabold text-sky-300">🧠 Gemini 4.0 中枢（总架构师 / 多模态视觉官 / NotebookLM 云端台账）</div>
-            <div class="text-xs text-slate-300 mt-1">
-              负责：全局 SOP 拆解 ｜ 同行 UI 截图转精确尺寸规范 ｜ 生鲜坏果照片多模态定损秒赔 ｜ 每日经营复盘与云端知识库同步
-            </div>
+        <div class="bg-slate-800/80 border border-sky-500/30 rounded-xl p-2.5 flex items-start gap-2.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-sky-400 pulse-dot mt-1 shrink-0"></span>
+          <div>
+            <div class="font-bold text-white">🛵 第三方聚合骑手 API</div>
+            <div class="text-[11px] text-sky-300 mt-0.5">顺丰同城/达达/蜂鸟/闪送 (远程联调中)</div>
           </div>
         </div>
-
-        <!-- 分发箭头 -->
-        <div class="flex justify-center text-slate-500 text-xs font-mono">
-          ┌──────────────┴──────────────┬───────────────────────────┬──────────────┴──────────────┐
+        <div class="bg-slate-800/80 border border-amber-500/30 rounded-xl p-2.5 flex items-start gap-2.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-amber-400 mt-1 shrink-0"></span>
+          <div>
+            <div class="font-bold text-white">🏪 思迅天店 3000+ 收银流水</div>
+            <div class="text-[11px] text-amber-300 mt-0.5">待正式接手门店后导出 Excel 接入</div>
+          </div>
         </div>
-
-        <!-- 第三层：四大执行引擎 + 思迅天店底座 -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-          <!-- Cursor -->
-          <div onclick="setRoleFilter('cursor')" class="flow-box bg-slate-800/90 border border-blue-500/40 rounded-xl p-3">
-            <div class="text-sm font-bold text-blue-400 flex items-center justify-between">
-              <span>💻 Cursor</span>
-              <span class="text-[11px] px-1.5 py-0.5 rounded bg-blue-500/20">全栈研发</span>
-            </div>
-            <ul class="text-xs text-slate-300 mt-2 space-y-1 list-disc list-inside">
-              <li>小程序单列+双列页面</li>
-              <li>FastAPI + 5张极简表</li>
-              <li>PC微信抓包解析脚本</li>
-              <li>FFmpeg 视频自动混剪</li>
-            </ul>
-          </div>
-
-          <!-- Grokbot -->
-          <div onclick="setRoleFilter('grokbot')" class="flow-box bg-slate-800/90 border border-purple-500/40 rounded-xl p-3">
-            <div class="text-sm font-bold text-purple-400 flex items-center justify-between">
-              <span>🦅 Grokbot</span>
-              <span class="text-[11px] px-1.5 py-0.5 rounded bg-purple-500/20">营销与话术</span>
-            </div>
-            <ul class="text-xs text-slate-300 mt-2 space-y-1 list-disc list-inside">
-              <li>收银台/外卖包裹钩子卡</li>
-              <li>早中晚3波店长口吻推文</li>
-              <li>50款爆品直播促单话术</li>
-              <li>结合天气+竞对调价简报</li>
-            </ul>
-          </div>
-
-          <!-- AI Agent -->
-          <div onclick="setRoleFilter('agent')" class="flow-box bg-slate-800/90 border border-emerald-500/40 rounded-xl p-3">
-            <div class="text-sm font-bold text-emerald-400 flex items-center justify-between">
-              <span>⚙️ AI Agent</span>
-              <span class="text-[11px] px-1.5 py-0.5 rounded bg-emerald-500/20">自动化执行</span>
-            </div>
-            <ul class="text-xs text-slate-300 mt-2 space-y-1 list-disc list-inside">
-              <li>企微 Webhook 定时推群</li>
-              <li>群内 @小助手 秒级导购</li>
-              <li>4080显卡 24h 数字人推流</li>
-              <li>自动下载归档商品主图</li>
-            </ul>
-          </div>
-
-          <!-- GitHub -->
-          <div onclick="setRoleFilter('github')" class="flow-box bg-slate-800/90 border border-slate-500/50 rounded-xl p-3">
-            <div class="text-sm font-bold text-slate-200 flex items-center justify-between">
-              <span>🐙 GitHub</span>
-              <span class="text-[11px] px-1.5 py-0.5 rounded bg-slate-700">云端管家</span>
-            </div>
-            <ul class="text-xs text-slate-300 mt-2 space-y-1 list-disc list-inside">
-              <li>私有仓库安全备份代码</li>
-              <li>Actions 早6:30定时比价</li>
-              <li>代码 Push 自动部署上线</li>
-              <li>进度台账 JSON 云端托管</li>
-            </ul>
-          </div>
-
-          <!-- 思迅天店 -->
-          <div onclick="setRoleFilter('all')" class="flow-box bg-slate-800/90 border border-orange-500/40 rounded-xl p-3">
-            <div class="text-sm font-bold text-orange-400 flex items-center justify-between">
-              <span>🏪 思迅天店</span>
-              <span class="text-[11px] px-1.5 py-0.5 rounded bg-orange-500/20">线下收银底座</span>
-            </div>
-            <ul class="text-xs text-slate-300 mt-2 space-y-1 list-disc list-inside">
-              <li>保留现有扫码枪小票机</li>
-              <li>导出高周转热销品Excel</li>
-              <li>50款线上爆品库存软隔离</li>
-              <li>断网亦保障门店收银稳定</li>
-            </ul>
+        <div class="bg-slate-800/80 border border-purple-500/30 rounded-xl p-2.5 flex items-start gap-2.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-purple-400 mt-1 shrink-0"></span>
+          <div>
+            <div class="font-bold text-white">🎬 员工3-4号 视频与尾货群</div>
+            <div class="text-[11px] text-purple-300 mt-0.5">待接手门店后开启微信群自动签收</div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 模块二：多维角色筛选与搜索栏 -->
-    <section class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-lg">
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
-        <!-- 角色过滤按钮 -->
-        <div class="flex flex-wrap gap-1.5" id="roleFilterBtns">
-          <button onclick="setRoleFilter('all')" data-role="all" class="role-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-sky-600 text-white">全部节点 (18)</button>
-          <button onclick="setRoleFilter('me')" data-role="me" class="role-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-amber-300 hover:bg-slate-700">👤 只看我做什么</button>
-          <button onclick="setRoleFilter('gemini')" data-role="gemini" class="role-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-sky-300 hover:bg-slate-700">🧠 Gemini 4.0</button>
-          <button onclick="setRoleFilter('cursor')" data-role="cursor" class="role-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-blue-300 hover:bg-slate-700">💻 Cursor</button>
-          <button onclick="setRoleFilter('grokbot')" data-role="grokbot" class="role-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-purple-300 hover:bg-slate-700">🦅 Grokbot</button>
-          <button onclick="setRoleFilter('agent')" data-role="agent" class="role-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-emerald-300 hover:bg-slate-700">⚙️ AI Agent</button>
-          <button onclick="setRoleFilter('github')" data-role="github" class="role-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-200 hover:bg-slate-700">🐙 GitHub</button>
+    <!-- 模块一：V4.0 顶层人机与第三方运力指挥架构图 -->
+    <section class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-sm sm:text-base md:text-lg font-extrabold text-white">
+          🏛️ 一、 V4.0 顶层架构：AI大领导总领 × 全品类0扣点小程序 × 美团饿了么洗客 × 第三方骑手
+        </h2>
+        <button onclick="toggleSection('orgBody', 'orgBtn')" id="orgBtn" class="text-xs text-sky-400 hover:underline shrink-0">收起 ▲</button>
+      </div>
+
+      <div id="orgBody" class="space-y-4">
+        <!-- 顶层：AI大领导 -->
+        <div class="flex justify-center">
+          <div onclick="setRoleFilter('leader')" class="org-card w-full lg:w-4/5 bg-gradient-to-r from-indigo-600/30 via-purple-600/25 to-sky-600/30 border-2 border-indigo-400/70 rounded-2xl p-3.5 text-center shadow-lg">
+            <div class="inline-block px-3 py-0.5 rounded-full text-[11px] font-black bg-indigo-500 text-white mb-1">
+              TOP 1 · 全局总指挥 (Gemini 4.0 API + 云端账本)
+            </div>
+            <div class="text-sm sm:text-base font-black text-indigo-200">
+              👑 AI 大领导：前期指挥 Cursor 远程造好“全品类小程序+爬虫+骑手接口”，接手后统筹“全品双轨定价+6员工排班+每晚扭亏复盘”
+            </div>
+            <p class="text-xs text-slate-300 mt-1">
+              核心战略：用 <b>美团/饿了么/抖音（高价防亏）</b> 白嫖周边3公里公域流量 ➔ 靠 <b>包裹洗客卡+收银截流</b> 全部洗进 <b>自有3000+全品类小程序（0扣点、便宜15%）</b> ➔ 由 <b>顺丰/达达/蜂鸟第三方骑手</b> 送货上门！
+            </p>
+          </div>
         </div>
 
-        <!-- 状态过滤 + 搜索框 -->
+        <!-- 三大支柱并列：线上Agent矩阵 + 线下1+6物理战队 + 外部公域与第三方骑手 -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-3.5">
+
+          <!-- 支柱1：线上AI Agent矩阵（远程先行主力） -->
+          <div class="bg-sky-950/20 border-2 border-sky-500/40 rounded-2xl p-3.5 space-y-2.5">
+            <div class="flex items-center justify-between border-b border-sky-500/30 pb-1.5">
+              <span class="text-xs sm:text-sm font-extrabold text-sky-300">🤖 1. 线上 AI Agent 矩阵 (远程先干)</span>
+              <span class="text-[10px] px-2 py-0.5 rounded bg-sky-500/20 text-sky-200 font-bold">Day 1-20 主力</span>
+            </div>
+            <div onclick="setRoleFilter('cursor')" class="org-card bg-slate-800/85 border border-blue-500/40 rounded-xl p-2.5 text-xs">
+              <div class="font-bold text-blue-300">💻 Cursor (调用Claude写代码)</div>
+              <p class="text-[11px] text-slate-300 mt-0.5">写3000+全品类小程序(左分类右列表+搜索)、FastAPI后端、顺丰/达达/蜂鸟聚合呼叫骑手接口、PC抓包脚本。</p>
+            </div>
+            <div onclick="setRoleFilter('agent')" class="org-card bg-slate-800/85 border border-emerald-500/40 rounded-xl p-2.5 text-xs">
+              <div class="font-bold text-emerald-300">🕷️ 爬虫 & 自动化 Agent</div>
+              <p class="text-[11px] text-slate-300 mt-0.5">远程爬美团闪购/饿了么/多多3000+全品类商品图库与规格；企微定时推群；本地4080显卡24h虚拟人直播。</p>
+            </div>
+            <div onclick="setRoleFilter('grokbot')" class="org-card bg-slate-800/85 border border-purple-500/40 rounded-xl p-2.5 text-xs">
+              <div class="font-bold text-purple-300">🦅 Grokbot (销冠文案大脑)</div>
+              <p class="text-[11px] text-slate-300 mt-0.5">写《美团包裹比价洗客卡》、每日早中晚3波业主群推文、晚8点尾货日清秒杀文案、100段直播口播稿。</p>
+            </div>
+          </div>
+
+          <!-- 支柱2：线下1主理人+6员工（只管店内，绝不出店跑腿！） -->
+          <div class="bg-amber-950/20 border-2 border-amber-500/40 rounded-2xl p-3.5 space-y-2.5">
+            <div class="flex items-center justify-between border-b border-amber-500/30 pb-1.5">
+              <span class="text-xs sm:text-sm font-extrabold text-amber-300">👥 2. 我 + 6名门店员工 (只管店内！)</span>
+              <span class="text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-200 font-bold">Day 21起进店</span>
+            </div>
+            <div onclick="setRoleFilter('me')" class="org-card bg-slate-800/85 border border-amber-400/50 rounded-xl p-2.5 text-xs">
+              <div class="font-bold text-amber-300">👤 我本人 (总经理 / 拍板人)</div>
+              <p class="text-[11px] text-slate-300 mt-0.5">接手前在家督导Cursor远程开发；接手后砍掉盲目周三88折、导出思迅3000+商品表、看每晚22点AI日报发奖金。</p>
+            </div>
+            <div onclick="setRoleFilter('staff_cashier')" class="org-card bg-slate-800/85 border border-orange-400/40 rounded-xl p-2.5 text-xs">
+              <div class="font-bold text-orange-300">👩‍💼 员工 1-2 号：收银与截流岗 (2人)</div>
+              <p class="text-[11px] text-slate-300 mt-0.5">思迅扫码结账、把每天400进店客流洗进小程序群(立减2元)；<b>简单AI</b>：手机输6位码1秒核销自提单。</p>
+            </div>
+            <div onclick="setRoleFilter('staff_fresh')" class="org-card bg-slate-800/85 border border-lime-400/40 rounded-xl p-2.5 text-xs">
+              <div class="font-bold text-lime-300">👨‍🔧 员工 3-4 号：生鲜理货与素材岗 (2人)</div>
+              <p class="text-[11px] text-slate-300 mt-0.5">生鲜挑拣陈列、挂小程序便宜15%爆炸贴；<b>简单AI</b>：早拍15秒到货视频发群、晚8点拍剩菜发语音触发AI日清。</p>
+            </div>
+            <div onclick="setRoleFilter('staff_picker')" class="org-card bg-slate-800/85 border border-cyan-400/40 rounded-xl p-2.5 text-xs">
+              <div class="font-bold text-cyan-300">📦 员工 5-6 号：店内拣货打包岗 (绝不送货)</div>
+              <p class="text-[11px] text-slate-300 mt-0.5">按AI排好的货架路线极速拣货装袋、<b>100%塞洗客卡</b>、放门口取货台；<b>简单AI</b>：手机点【打包完成·呼叫骑手】。</p>
+            </div>
+          </div>
+
+          <!-- 支柱3：公域流量漏斗与第三方骑手运力池 -->
+          <div class="bg-emerald-950/20 border-2 border-emerald-500/40 rounded-2xl p-3.5 space-y-2.5 flex flex-col justify-between">
+            <div class="space-y-2.5">
+              <div class="flex items-center justify-between border-b border-emerald-500/30 pb-1.5">
+                <span class="text-xs sm:text-sm font-extrabold text-emerald-300">🛵 3. 公域白嫖漏斗 & 第三方骑手池</span>
+                <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-200 font-bold">外部杠杆</span>
+              </div>
+              <div class="bg-slate-800/85 border border-rose-500/40 rounded-xl p-2.5 text-xs">
+                <div class="font-bold text-rose-300">📢 美团闪购 / 饿了么 / 抖音团购 (公域漏斗)</div>
+                <p class="text-[11px] text-slate-300 mt-1 leading-relaxed">
+                  · <b>定位</b>：平台扣点15%~25%太黑，绝不做主力利润来源，只用来<b>白嫖周边3公里公域搜索新客</b>！<br>
+                  · <b>洗客手段</b>：外卖定高价防亏 + 每单包裹必钉一张《扫小程序买全店3000种商品直降15%》洗客卡，买一次就洗进自己小程序！
+                </p>
+              </div>
+              <div class="bg-slate-800/85 border border-teal-500/40 rounded-xl p-2.5 text-xs">
+                <div class="font-bold text-teal-300">🛵 顺丰同城 / 达达 / 蜂鸟 / 闪送 (聚合运力)</div>
+                <p class="text-[11px] text-slate-300 mt-1 leading-relaxed">
+                  · <b>定位</b>：门店6名员工绝不出门送货！所有外卖与小程序满额配送100%交由第三方骑手承接。<br>
+                  · <b>运作</b>：员工5-6号打包放上门口【闪电取货台】点呼叫 ➔ 系统自动比价派给最便宜骑手(约4.5~5.5元/单，远低于美团20%扣点)！
+                </p>
+              </div>
+            </div>
+            <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-2 text-[11px] text-slate-400 text-center">
+              💡 <b>利润公式</b>：省下美团 20% 扣点 = 足够补贴第三方骑手运费 + 给邻居让利 10% + 门店净赚 22% 毛利！
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 模块二：视角切换与搜索过滤栏 -->
+    <section class="bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 shadow-lg">
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+        <div class="flex flex-wrap gap-1.5" id="roleFilterBtns">
+          <button onclick="setRoleFilter('all')" data-role="all" class="role-btn px-3 py-1.5 rounded-lg text-xs font-extrabold bg-sky-600 text-white ring-2 ring-sky-400">全部18节点</button>
+          <button onclick="setPhaseFilter('remote')" data-role="phase_remote" class="role-btn px-2.5 py-1.5 rounded-lg text-xs font-extrabold bg-rose-950/80 text-rose-300 border border-rose-500/40 hover:bg-rose-900">🔥 只看：接手前·远程先行(1~9)</button>
+          <button onclick="setPhaseFilter('store')" data-role="phase_store" class="role-btn px-2.5 py-1.5 rounded-lg text-xs font-extrabold bg-emerald-950/80 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-900">🏪 只看：接手后·门店落地(10~18)</button>
+          <button onclick="setRoleFilter('leader')" data-role="leader" class="role-btn px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-indigo-300 hover:bg-slate-700">👑 AI大领导</button>
+          <button onclick="setRoleFilter('me')" data-role="me" class="role-btn px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-amber-300 hover:bg-slate-700">👤 我本人</button>
+          <button onclick="setRoleFilter('cursor')" data-role="cursor" class="role-btn px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-blue-300 hover:bg-slate-700">💻 Cursor</button>
+          <button onclick="setRoleFilter('staff_cashier')" data-role="staff_cashier" class="role-btn px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-orange-300 hover:bg-slate-700">👩‍💼 收银1-2</button>
+          <button onclick="setRoleFilter('staff_fresh')" data-role="staff_fresh" class="role-btn px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-lime-300 hover:bg-slate-700">👨‍🔧 理货3-4</button>
+          <button onclick="setRoleFilter('staff_picker')" data-role="staff_picker" class="role-btn px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-cyan-300 hover:bg-slate-700">📦 打包呼骑手5-6</button>
+        </div>
+
         <div class="flex items-center gap-2">
-          <select id="statusFilter" onchange="renderRoadmap()" class="bg-slate-800 border border-slate-700 text-xs text-slate-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-sky-500">
+          <select id="statusFilter" onchange="renderRoadmap()" class="bg-slate-800 border border-slate-700 text-xs text-slate-200 rounded-lg px-2.5 py-1.5">
             <option value="all">全部状态</option>
-            <option value="todo">⏳ 未完成节点</option>
-            <option value="done">✅ 已完成节点</option>
+            <option value="todo">⏳ 未完成</option>
+            <option value="done">✅ 已完成</option>
           </select>
           <input
             type="text"
             id="searchInput"
             oninput="renderRoadmap()"
-            placeholder="搜索节点/工具/关键词..."
-            class="bg-slate-800 border border-slate-700 text-xs text-slate-200 rounded-lg px-3 py-1.5 w-44 md:w-56 focus:outline-none focus:border-sky-500"
+            placeholder="搜全品类/骑手/美团/节点..."
+            class="bg-slate-800 border border-slate-700 text-xs text-slate-200 rounded-lg px-3 py-1.5 w-full sm:w-44 focus:outline-none focus:border-sky-500"
           />
         </div>
       </div>
     </section>
 
-    <!-- 模块三：六大阶段 · 18个细化节点容器 -->
+    <!-- 模块三：六大阶段 · 18个核心节点容器 -->
     <div id="roadmapContainer" class="space-y-8"></div>
 
   </main>
 
-  <!-- 底部悬浮提示通知 Toast -->
-  <div id="toast" class="fixed bottom-6 right-6 z-50 hidden px-4 py-2.5 rounded-xl bg-emerald-600 text-white text-xs font-bold shadow-2xl border border-emerald-400/40"></div>
+  <div id="toast" class="fixed bottom-5 right-5 z-50 hidden px-4 py-2.5 rounded-xl bg-emerald-600 text-white text-xs font-bold shadow-2xl border border-emerald-400/50"></div>
 
   <script>
-    const STORAGE_KEY = 'aishangjia_gemini4_roadmap_v2';
+    const STORAGE_KEY = 'aishangjia_v4_fullcatalog_roadmap';
 
     const ROLE_META = {
-      me:      { label: '👤 我本人',   badgeClass: 'bg-amber-500/20 text-amber-300 border-amber-500/40' },
-      gemini:  { label: '🧠 Gemini',   badgeClass: 'bg-sky-500/20 text-sky-300 border-sky-500/40' },
-      cursor:  { label: '💻 Cursor',   badgeClass: 'bg-blue-500/20 text-blue-300 border-blue-500/40' },
-      grokbot: { label: '🦅 Grokbot',  badgeClass: 'bg-purple-500/20 text-purple-300 border-purple-500/40' },
-      agent:   { label: '⚙️ AI Agent', badgeClass: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' },
-      github:  { label: '🐙 GitHub',   badgeClass: 'bg-slate-600/30 text-slate-200 border-slate-500/40' }
+      leader:        { label: '👑 AI大领导(Gemini)',     badge: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40' },
+      me:            { label: '👤 我本人(总经理)',       badge: 'bg-amber-500/20 text-amber-300 border-amber-500/40' },
+      staff_cashier: { label: '👩‍💼 员工1-2(收银截流)',   badge: 'bg-orange-500/20 text-orange-300 border-orange-500/40' },
+      staff_fresh:   { label: '👨‍🔧 员工3-4(理货拍素材)', badge: 'bg-lime-500/20 text-lime-300 border-lime-500/40' },
+      staff_picker:  { label: '📦 员工5-6(打包呼骑手)', badge: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40' },
+      cursor:        { label: '💻 Cursor研发',           badge: 'bg-blue-500/20 text-blue-300 border-blue-500/40' },
+      grokbot:       { label: '🦅 Grokbot文案',          badge: 'bg-purple-500/20 text-purple-300 border-purple-500/40' },
+      agent:         { label: '⚙️ 爬虫/自动化Agent',     badge: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' },
+      github:        { label: '🐙 GitHub管家',           badge: 'bg-slate-600/30 text-slate-200 border-slate-500/40' }
     };
 
     const STAGES_DATA = [
+      // ==================== 第一部分：接手前·远程先行期 ====================
       {
         stageId: 'S1',
-        stageTitle: '阶段一：千平卖场动线改造、思迅天店“爆品池”隔离与云端建档',
-        stagePeriod: 'Day 1 - Day 7',
-        stageDesc: '不动线下思迅天店收银硬件，以最小成本划出黄金自提动线与 50 款线上独立库存爆品池，杜绝超卖。',
+        phase: 'remote',
+        phaseBadge: '🔥 接手前·远程先行 (无需进店)',
+        stageTitle: '阶段一（远程先干）：GitHub 基建与爬取“3000+全品类”商品图库/双轨定价',
+        stagePeriod: 'Day 1 - Day 6',
+        stageDesc: '还没接手门店也不耽误！在家用电脑抓包周边美团闪购/饿了么/多多买菜，先把 3000+ 全品类商品高清图、条码与双轨价格体系建好。',
         nodes: [
           {
             id: '1.1',
-            title: '千平卖场“黄金自提动线”落位与引流物料铺设',
-            days: 'Day 1 - Day 2',
-            roles: ['me', 'gemini', 'grokbot'],
-            myActions: [
-              '在千平卖场靠里侧（生鲜区与烘焙熟食交界处）划出 15~20㎡ 作为“线上团购自提核销区”，让自提顾客必须穿过主货架带动连带购买。',
-              '放置 3 组物理分拣货架（常温筐、冷藏风柜、冷冻柜），贴上手机尾号 0~9 大号数字标签。',
-              '在收银台摆放企微立牌，并将印好的引流卡交给美团外卖打包员每单必塞。'
+            title: 'GitHub 仓库初始化与手机端公网看板上线',
+            days: 'Day 1 (已完成)',
+            roles: ['leader', 'me', 'github'],
+            leaderCmd: '统筹云端 NotebookLM【超市生存法则】总台账与 GitHub 代码库版本控制。',
+            physicalActions: [
+              '【👤 我本人（远程）】：创建 GitHub 仓库 ai-shangjia，上传 index.html 开启 Pages 公网访问，手机随时查看推进。'
             ],
-            aiActions: [
-              { role: 'gemini',  task: '根据超市二楼平面布局，输出《自提区货架编号规则与早晚高峰店员极速分拣 SOP》。' },
-              { role: 'grokbot', task: '生成收银台立牌与美团外卖包裹“精准让利钩子卡”文案（突出进群立减2元/送鸡蛋+整箱水直降10元）。' }
+            onlineActions: [
+              { role: 'github', task: '全天候托管 https://a841478369-code.github.io/ai-shangjia/ 公网看板与后续前后端代码。' }
             ],
-            prompt: '【发给 Grokbot】：我是北京爱尚佳生活超市（二楼千平社区超市）老板，请帮我写3版印在美团外卖夹带卡和收银台立牌上的高转化钩子文案。要求：接地气、字少有力，核心利益点是“扫码进本小区业主严选群，领3元无门槛自提券+成箱矿泉水/纯牛奶直降10元”。',
-            deliverable: '自提区 0-9 分拣货架贴标就绪 + 200 张外卖/收银引流卡印制到店'
+            prompt: '【已完成节点】：仓库与手机端公网看板已上线。',
+            deliverable: '手机/电脑公网看板正常访问，云端台账实时联动'
           },
           {
             id: '1.2',
-            title: '思迅天店导出热销品与首批 50 款“独立爆品池”测算',
-            days: 'Day 3 - Day 5',
-            roles: ['me', 'cursor'],
-            myActions: [
-              '登录思迅天店后台，导出近 30 天销量最高的前 100 款商品 Excel（含商品条码、进价、门店现价）。',
-              '人工圈出 50 款适合线上团购的硬通货（原箱时令水果、30枚装土鸡蛋、整箱水饮牛奶、原切牛腩等），在仓库划出“线上专属安全库存”（与线下散卖软隔离）。'
+            title: '远程抓包美团闪购/饿了么/多多买菜“3000+全品类商品库与多规格数据”',
+            days: 'Day 2 - Day 4',
+            roles: ['leader', 'me', 'cursor', 'agent'],
+            leaderCmd: '制定千平超市 12 大全品类标准分类树（果蔬/肉蛋/熟食烘焙/水饮酒乳/休食速食/粮油调味/日百个护/家清母婴），下达全量抓包指令。',
+            physicalActions: [
+              '【👤 我本人（远程在家）】：在电脑上登录 PC 微信与美团外卖/饿了么，定位到目标超市周边 3 公里的大型商超（如物美/华联/大型生鲜超市）及多多买菜，花 20 分钟把 12 个分类从上往下滑一遍。'
             ],
-            aiActions: [
-              { role: 'cursor', task: '在 Ask 模式下编写 Python 清洗脚本 clean_products.py，自动读取思迅天店 Excel，加上包材损耗成本，校验毛利率 ≥15%，并将价格转为“分”导出为标准 products.json。' }
+            onlineActions: [
+              { role: 'cursor', task: '编写 Mitmproxy 抓包解析脚本 sniff_full_catalog.py，自动拦截滑过的所有商品名称、69标准条码、12大分类归属、原价、促销价、高清无水印大图及多规格选项（单瓶 vs 整箱）。' },
+              { role: 'agent',  task: '自动批量下载 3000+ 张商品高清图并按分类与条码归档，免去进店后人工一个个拍照的苦力活。' }
             ],
-            prompt: '【发给 Cursor (Ask模式)】：请帮我写一个 Python 脚本 clean_products.py，读取思迅天店导出的 Excel 表（含商品名称、进价、门店价），自动增加“包材成本(默认1.0元)”，按线上特惠价=门店价*0.85自动测算毛利率（低于15%标红预警），并将所有金额转换为整型“分”，导出为小程序后端可直接导入的 products.json。',
-            deliverable: '产出《首批 50 款爆品定价测算表.xlsx》与标准 products.json 数据包'
+            prompt: '【发给 Cursor (Ask模式)】：请编写基于 Python mitmproxy 的全品类抓包脚本 sniff_full_catalog.py，用于监听 PC 微信美团外卖商超/多多买菜接口，自动提取商品名称、分类名、规格数组(specs)、现价、原价及高清图片 URL，自动去重后存入 full_catalog_3000.sqlite 数据库中。',
+            deliverable: '在家零成本建好 3000+ 款带高清图、分类、多规格的超市全品类初始底座'
           },
           {
             id: '1.3',
-            title: 'GitHub 私有仓库初始化与 Gemini 云端台账建档',
-            days: 'Day 6 - Day 7',
-            roles: ['me', 'github', 'gemini'],
-            myActions: [
-              '登录 GitHub 账号，在 Cursor 欢迎页点击 Connect GitHub 完成绑定。',
-              '确认本看板（ai.html）与云端 NotebookLM【超市生存法则】笔记本双向联动。'
+            title: '编写“美团饿了么高扣点防亏价 vs 自有小程序0扣点低价”双轨定价清洗脚本',
+            days: 'Day 5 - Day 6',
+            roles: ['leader', 'me', 'cursor'],
+            leaderCmd: '针对美团/饿了么 15%~25% 的暴利扣点，设计双轨价格公式：外卖平台售价 = 门店基准价 × 1.15（配合高满减防亏）；自有小程序售价 = 门店基准价 × 0.90~0.95（全品真便宜 10%~15%），制造强烈价差把用户逼向小程序！',
+            physicalActions: [
+              '【👤 我本人（远程在家）】：审阅 AI 大领导制定的 12 大品类目标毛利率底线（全店综合毛利锁定 ≥20%）。'
             ],
-            aiActions: [
-              { role: 'github', task: '创建私有仓库 aishangjia-supermarket，分为 /miniapp（小程序）、/backend（FastAPI）、/scripts（爬虫与自动化）三个目录。' },
-              { role: 'gemini', task: '在云端 NotebookLM 持续维护 18 节点进度台账与爆品知识库。' }
+            onlineActions: [
+              { role: 'cursor', task: '编写 build_omni_pricing.py 脚本，将来只需导入思迅天店 Excel，10 秒钟自动生成三套表格：①《自有小程序全品特惠导入表》、②《美团闪购批量上架表》、③《饿了么批量上架表》。' }
             ],
-            prompt: '【发给 Cursor 终端】：git init && git add . && git commit -m "init: 爱尚佳超市AI全链路工程初始化"',
-            deliverable: 'GitHub 私有库建立完成，代码与爆品台账实现云端双备份'
+            prompt: '【发给 Cursor (Ask模式)】：请编写 Python 脚本 build_omni_pricing.py，读取商品成本与门店基准价，自动生成两套线上价格：1.小程序0扣点会员价（保底毛利18%，生鲜爆品直降12%）；2.美团饿了么外卖价（自动计入18%平台扣点与包装费，反推不亏本的划线满减价），并分别导出为美团、饿了么和自研小程序的标准导入格式。',
+            deliverable: '双轨定价转换器就绪，确保美团饿了么绝不亏本、自有小程序具备绝对价格碾压优势'
           }
         ]
       },
       {
         stageId: 'S2',
-        stageTitle: '阶段二：周边 3 公里竞对数据抓取与 AI 选品情报网',
-        stagePeriod: 'Day 8 - Day 14',
-        stageDesc: '无需人工手敲商品图和文案，直接通过 PC 微信抓包多多买菜/美团优选建立高清商品库，并每日自动比价。',
+        phase: 'remote',
+        phaseBadge: '🔥 接手前·远程先行 (无需进店)',
+        stageTitle: '阶段二（远程先干）：Cursor 研发“3000+全品类小程序”与“第三方聚合骑手接口”',
+        stagePeriod: 'Day 7 - Day 14',
+        stageDesc: '在家用 Cursor 把主推的全品类小程序、防超卖库存锁、以及对接顺丰同城/达达/蜂鸟的第三方自动呼骑手接口全部开发完毕。',
         nodes: [
           {
             id: '2.1',
-            title: 'PC 微信抓包“多多买菜”一键建立高清商品图与规格库',
-            days: 'Day 8 - Day 10',
-            roles: ['me', 'cursor', 'agent'],
-            myActions: [
-              '在电脑上登录 PC 端微信，搜索打开“多多买菜”小程序，将自提点定位到本超市所在小区。',
-              '开启本地抓包监听后，手动从上往下滑动浏览“水果、蔬菜、肉禽蛋、水饮”分类页 5 分钟。'
+            title: '全品类小程序前端研发（首页单列爆品 + 分类页左导航右全品 + 极速搜索 + 多规格）',
+            days: 'Day 7 - Day 10',
+            roles: ['leader', 'me', 'cursor'],
+            leaderCmd: '升级小程序架构：不再局限于 50 款爆品！首页用“单列大卡片”强推 30 款引流生鲜爆品；分类页采用“左侧 12 大分类电梯导航 + 右侧 3000+ 全品类虚拟列表（防卡顿）+ 顶部拼音/条码搜索框 + 单件/整箱多规格弹窗”。',
+            physicalActions: [
+              '【👤 我本人（远程在家）】：在电脑微信开发者工具上扫码预览，测试滑动浏览 3000 个商品的流畅度、搜索“酱油/纸巾/可乐”的秒出效果，以及底部“还差X元免骑手配送费”的凑单提示条。'
             ],
-            aiActions: [
-              { role: 'cursor', task: '编写基于 Mitmproxy 的 30 行抓包过滤脚本 sniff_duoduo.py，自动拦截滑动过程中的商品 JSON，提取品名、规格（如5斤±100g）、秒杀价、原价与高清无水印大图 URL。' },
-              { role: 'agent',  task: '运行图片批量下载器，自动将抓取的高清商品主图按 SPU 编号重命名归档到 /assets/goods 目录。' }
+            onlineActions: [
+              { role: 'cursor', task: '调用 Claude 模型在 Ask/Plan 模式下编写首页(pages/index)、全品类分类页(pages/category)、搜索页(pages/search)及购物车凑单组件。' }
             ],
-            prompt: '【发给 Cursor (Ask模式)】：请帮我写一段基于 Python mitmproxy 的插件脚本 addon.py，用于监听 PC 微信打开社区团购小程序时的 JSON 响应，自动匹配提取包含 goods_name、price、market_price、hd_thumb_url 的字段，并实时追加写入本地的 competitor_goods.csv 文件中。',
-            deliverable: '零人工录入获得 100+ 款带高清主图、标准净重公差规格的初始商品库'
+            prompt: '【发给 Cursor (Ask模式)】：请为“爱尚佳生活超市”编写原生微信小程序的【全品类分类页 pages/category】：1.顶部为固定搜索框（支持搜商品名或拼音首字母）及“比美团/饿了么省15%”提示条；2.主体为左右分栏：左侧宽度180rpx展示12大超市分类竖向滚动并高亮当前项，右侧展示该分类下的商品列表（支持虚拟分页加载3000+SKU不卡顿、多规格选择弹窗如“单瓶/整箱”、红色会员价与绿色加号按钮）；3.底部为悬浮购物车条，动态显示“再买X元即可免第三方骑手配送费”。',
+            deliverable: '全品类小程序前端 4 大页面在本地微信开发者工具完美跑通'
           },
           {
             id: '2.2',
-            title: '周边 3 公里 20 款敏感民生品每日自动比价早报',
+            title: 'FastAPI 后端 + 3000+全品类数据库 + “防超卖安全库存锁”与缺货替换接口',
             days: 'Day 11 - Day 12',
-            roles: ['me', 'github', 'agent', 'grokbot'],
-            myActions: [
-              '锁定店内最吸引大爷大妈比价的 20 款民生引流品（30枚鸡蛋、黄心土豆、红颜草莓、农夫山泉整箱等）。',
-              '每天早上 07:30 在微信上看一眼 AI 发来的比价简报，拍板当天哪 3 款商品降价主推。'
+            roles: ['leader', 'me', 'cursor'],
+            leaderCmd: '解决全品类 3000+ 商品线上线下库存不同步死穴：设定“安全库存缓冲锁”（思迅天店库存 ≤2 件时小程序自动停售，留给线下散客拿），并开发店员拣货发现缺货时“一键退差价/换同款”功能。',
+            physicalActions: [
+              '【👤 我本人（远程在家）】：在本地电脑启动 FastAPI 服务，测试批量导入 3000 款商品 JSON 及并发下单扣库存接口。'
             ],
-            aiActions: [
-              { role: 'github',  task: '通过 GitHub Actions 定时任务（每天早 06:30）触发价格比对脚本与当日北京/天津天气 API 查询。' },
-              { role: 'grokbot', task: '对比本店价与竞对价，结合今日天气（降温推火锅牛腩、周末推整箱啤酒零食），生成《早间 7:00 调价预警与今日主推建议》推送到店长企微。' }
+            onlineActions: [
+              { role: 'cursor', task: '编写 FastAPI 后端模型（categories分类表, products全品表, product_skus多规格表, orders订单表, delivery_orders骑手运单表）及思迅 Excel 增量同步接口。' }
             ],
-            prompt: '【发给 Grokbot】：以下是今天早上抓取的周边多多买菜20款民生品价格与我店里思迅天店的当前售价对比表，今天北京最高温14℃有小雨。请帮我挑出3款我存在价格劣势需要立刻调价的品种，并推荐3款适合今天下雨降温在业主群主推的高毛利连带商品。',
-            deliverable: '每日早 07:00 手机准时收到《竞对差价预警与今日主推早报》'
+            prompt: '【发给 Cursor (Ask模式)】：请基于 FastAPI + SQLAlchemy 编写支持 3000+ 全品类超市的后端商品与库存模型，包含：1.接收思迅天店导出的库存 Excel 自动更新线上可售库存（自动扣除 safety_stock=2 的安全缓冲库存防超卖）；2.当拣货员在门店发现某件小百货实际缺货时，支持调用 POST /api/staff/partial-refund 一键原路退还该单品差价而无需整单取消。',
+            deliverable: '支持 3000+ 全品类的后端数据库与防超卖/部分退差价机制跑通'
           },
           {
             id: '2.3',
-            title: '同城社媒（小红书/抖音）时令网红爆品每周挖掘',
+            title: '对接第三方聚合配送 API（顺丰同城/达达/蜂鸟/闪送/微信同城配送）',
             days: 'Day 13 - Day 14',
-            roles: ['me', 'agent', 'grokbot'],
-            myActions: [
-              '每周五下午花 5 分钟审阅 AI 抓取的同城网红爆品清单，联系新发地或批发商锁定下周预售货源。'
+            roles: ['leader', 'me', 'cursor'],
+            leaderCmd: '确立铁律：门店 6 名员工绝不出门送货！所有外卖与小程序满额配全部呼叫第三方骑手。后端对接聚合运力 API，实现“多平台骑手自动比价派单 + 恶劣天气自动加小费 + 顾客端实时看骑手轨迹”。',
+            physicalActions: [
+              '【👤 我本人（远程在家）】：在微信小程序后台开通官方【同城配送】插件（已内置顺丰同城/达达/闪送/美团跑腿接口，免单独开发多家签名）或注册【麦芽田/达达开放平台】获取测试 Key。'
             ],
-            aiActions: [
-              { role: 'agent',   task: '使用本地 Browser-use 自动化脚本定期检索小红书/抖音同城高赞词（如“山姆平替”、“丹东草莓”、“流心奶黄包”）。' },
-              { role: 'grokbot', task: '汇总出排名前 5 的网红单品，给出预计进货价区间与社区预售团购定价方案。' }
+            onlineActions: [
+              { role: 'cursor', task: '编写 /api/delivery/dispatch 自动呼叫骑手接口与骑手状态回调 Webhook（已接单 ➔ 骑手到店 ➔ 配送中 ➔ 已送达），并在员工手机端 /staff 加上【打包完成·呼叫骑手】大按钮。' }
             ],
-            prompt: '【发给 Browser-use / Grokbot】：请搜索近期北京同城小红书与抖音本地生活中互动量最高的 5 款生鲜水果或网红烘焙单品，分析它们走红的卖点词，并结合社区超市“次日到店自提”模式给出团购包装规格建议。',
-            deliverable: '建立每周更新的《周末预售网红大单品候选库》'
+            prompt: '【发给 Cursor (Ask模式)】：请帮我在 FastAPI 后端编写对接【微信小程序同城配送 API / 达达快送 API】的模块 delivery.py：1.顾客下单选择“送货上门”时，先调用预询价接口计算距离运费（满39元门店补贴3元运费，满69元免运费）；2.门店拣货员在手机端点击【打包完成·呼叫骑手】后，自动向顺丰同城/达达/蜂鸟发起正式派单，并返回生成的 #取货号（如 #08号袋）供小票机打印。',
+            deliverable: '沙盒测试跑通：点一下按钮即可自动向顺丰/达达/蜂鸟比价呼叫骑手并生成取货码'
           }
         ]
       },
       {
         stageId: 'S3',
-        stageTitle: '阶段三：自研零佣金小程序（单列爆品+双列凑单）极速研发',
-        stagePeriod: 'Day 15 - Day 25',
-        stageDesc: '采用“首页单列大卡片推爆款 + 分类页双列瀑布流凑单”黄金架构，配合极简 5 张表后端跑通微信支付与自提码核销。',
+        phase: 'remote',
+        phaseBadge: '🔥 接手前·远程先行 (无需进店)',
+        stageTitle: '阶段三（远程先干）：Gemini API 专线打通与“美团/饿了么白嫖洗客包”定稿',
+        stagePeriod: 'Day 15 - Day 20',
+        stageDesc: '在家把本地电脑到 Gemini API 的自动化汇报专线接通，并把美团/饿了么包裹洗客卡、4080 虚拟直播间全部预装好。',
         nodes: [
           {
             id: '3.1',
-            title: '小程序前端研发（首页单列大卡片 + 分类页双列瀑布流）',
-            days: 'Day 15 - Day 18',
-            roles: ['me', 'gemini', 'cursor'],
-            myActions: [
-              '在 Cursor 中卸载无关插件（如小说助手 Andrea Novel Helper），清理 novel-helper 文件夹保持工作区干净。',
-              '打开微信开发者工具，审阅页面视觉：主色采用生鲜翡翠绿(#2E7D32) + 抢购红(#E53935)，顶部固定显示“爱尚佳生活超市（总店自提）”。'
+            title: '打通本地电脑 Gemini API 专线 + 企微机器人秒级回执',
+            days: 'Day 15 - Day 16',
+            roles: ['leader', 'me', 'cursor', 'agent'],
+            leaderCmd: '解决“怎么知道我收到了数据”：本地脚本只要检测到文件夹有新表格或新视频，3秒内上传 Gemini API 分析，10秒内在企微群弹出【✅ AI大领导已读取数据回执】。',
+            physicalActions: [
+              '【👤 我本人（远程在家）】：获取 Gemini API Key 填入本地配置文件，往电脑 `D:\\爱尚佳数据中心` 丢一个测试 Excel 表，亲眼验证手机微信收到 AI 大领导的分析回执。'
             ],
-            aiActions: [
-              { role: 'gemini', task: '审查 UI 布局规范：首页顶部自提点栏 + 超级秒杀横滑区 + 下方单列左图右文大卡片（突出产地、净重公差、划线原价）；分类页采用紧凑双列网格方便油盐酱醋凑单。' },
-              { role: 'cursor', task: '切换至 Ask 模式（严禁乱开 Agent 模式扫全库浪费额度），逐个生成首页、分类页、购物车、个人中心 4 个页面的 WXML/WXSS/JS 代码。' }
+            onlineActions: [
+              { role: 'cursor', task: '编写本地后台守护脚本 ai_leader_daemon.py（使用 watchdog 监听文件夹变化 + 调用 google-genai SDK + 推送企微 Webhook）。' }
             ],
-            prompt: '【发给 Cursor (Ask模式)】：请用原生微信小程序代码编写首页 index.wxml 和 index.wxss。要求：1.顶部为“爱尚佳生活超市”自提点切换栏；2.中部为横向滑动的“今日超级秒杀”4宫格；3.主列表采用【单列横向大卡片】（左图240rpx正方形，右侧展示带[次日自提]标签的标题、卖点副标题、限时直降标签、红色放大现价、灰色划线原价，以及翡翠绿#2E7D32胶囊型“立即抢购”按钮）；4.底部为毛玻璃悬浮购物车条。',
-            deliverable: '微信开发者工具与手机预览码上 4 大核心页面渲染丝滑、加购交互正常'
+            prompt: '【发给 Cursor (Ask模式)】：请写一个 Python 后台监听脚本 ai_leader_daemon.py：使用 watchdog 监控本地 D:\\爱尚佳数据中心 目录（含 1_思迅收银表、2_员工拍视频、3_竞对爬虫表）。一旦放入新文件，立即调用 Gemini API 进行分析，并将“已成功读取文件名+核心数据摘要+今日调价/剪辑指令”通过企业微信群机器人 Webhook 发送到我手机上。',
+            deliverable: '往电脑文件夹丢任何表格/视频，手机微信 10 秒内必收到 AI 大领导签收分析回执'
           },
           {
             id: '3.2',
-            title: 'FastAPI 轻量后端 + SQLite 5张核心数据表搭建',
-            days: 'Day 19 - Day 22',
-            roles: ['me', 'cursor'],
-            myActions: [
-              '在电脑本地启动 Python FastAPI 服务，用 Postman 或小程序前端测试商品列表查询与下单扣库存接口。'
+            title: '美团闪购/饿了么/抖音“白嫖公域洗客入小程序”全套方案与比价卡印制',
+            days: 'Day 17 - Day 18',
+            roles: ['leader', 'me', 'grokbot'],
+            leaderCmd: '设计高转化洗客漏斗：在美团/饿了么挂 10 款极致引流品（如 0.99 元葱姜、9.9 元鸡蛋）骗取平台公域排名，再用包裹里的《比价洗客卡》把顾客彻底洗进自有全品类小程序。',
+            physicalActions: [
+              '【👤 我本人（远程在家）】：找淘宝或本地印刷厂，花几十块钱提前印好 3000 张《美团/饿了么包裹比价洗客卡》和 4 个收银台/货架爆炸贴立牌。'
             ],
-            aiActions: [
-              { role: 'cursor', task: '编写 models.py 与 db.py（开启 SQLite WAL 高并发模式），一次性建好 5 张极简核心表：users（用户表）、products（商品库存表，含 delivery_type 与 pickup_date）、orders（订单表，含 6位 pickup_code）、order_items（订单明细表）、user_addresses（本小区楼栋地址表）。' }
+            onlineActions: [
+              { role: 'grokbot', task: '撰写极具冲击力的洗客卡正反面文案（正面直接列出 5 款常用商品“美团价 vs 本店小程序价”对比表，反面放小程序太阳码+企微群二维码）。' }
             ],
-            prompt: '【发给 Cursor (Ask模式)】：我正在用 FastAPI + SQLAlchemy + SQLite 搭建社区超市小程序后端。请帮我编写 models.py（包含 users, products, orders, order_items, user_addresses 五张表，所有金额字段统一使用整型“分”避免精度丢失，orders表包含 delivery_mode 和 6位数字自提码 pickup_code 字段）以及开启 SQLite WAL 模式的 db.py 和防并发超卖的下单路由。',
-            deliverable: '本地 FastAPI 后端跑通，5 张表自动生成并支持高并发防超卖扣减库存'
+            prompt: '【发给 Grokbot】：我们要把美团外卖和饿了么当成免费广告牌，把点外卖的邻居全部洗到我们自己的0扣点全品类小程序里。请帮我设计一张夹在每个外卖袋里的《邻居省钱比价卡》文案：用最直观的数字告诉顾客“因为美团抽成20%，同样一箱水/一盒肉在美团买贵10块钱！直接微信扫本卡用【爱尚佳官方小程序】，全店3000种商品便宜15%，同样是顺丰/达达骑手半小时送到您家，今天扫码再白送5元无门槛券！”',
+            deliverable: '3000 张外卖包裹洗客卡与店内比价立牌印制到手，随时准备进店铺设'
           },
           {
             id: '3.3',
-            title: '微信支付 V3 联调、店员手机端 6位码核销与云端上线',
-            days: 'Day 23 - Day 25',
-            roles: ['me', 'cursor', 'github'],
-            myActions: [
-              '用爱尚佳超市营业执照完成微信小程序认证与微信支付商户号申请，下载 APIv3 证书密钥。',
-              '购买一台百元级轻量应用服务器（2核2G/4G）完成域名 HTTPS 配置，用自己手机真金白银支付 0.01 元实测核销。'
+            title: '在家用 RTX 4080 电脑预装 24h 虚拟主播与 FFmpeg 视频自动混剪流水线',
+            days: 'Day 19 - Day 20',
+            roles: ['leader', 'me', 'cursor', 'grokbot', 'agent'],
+            leaderCmd: '在进店前把 4080 主机的直播推流与短视频自动混剪脚本全部调通，进店后只需插网线换背景图即可 24h 开播。',
+            physicalActions: [
+              '【👤 我本人（远程在家）】：在自己的 RTX 4080 电脑上运行测试 auto_clip.py 混剪脚本与数字人直播软件。'
             ],
-            aiActions: [
-              { role: 'cursor', task: '编写微信支付 JSAPI 统一下单与异步回调接口，以及店员手机端极简核销页 /admin/verify（店员输入顾客报出的 6 位数字自提码或扫二维码，1秒完成核销出库）。' },
-              { role: 'github', task: '配置 GitHub Actions 自动部署脚本，本地代码 git push 后自动同步更新至云服务器。' }
+            onlineActions: [
+              { role: 'grokbot', task: '生成全品类超市省钱口播稿 100 段（强调“抖音领券到店或微信搜爱尚佳小程序全店3000种商品骑手送到家”）。' },
+              { role: 'cursor',  task: '调通 FFmpeg 自动拼接视频、加 AI 配音、加黄底黑字同城大标题脚本。' }
             ],
-            prompt: '【发给 Cursor (Ask模式)】：请帮我在 FastAPI 后端中增加一个店员手机端核销接口 POST /api/admin/verify，接收 6 位数字 pickup_code 或订单号，校验订单状态为 PAID 后将其更新为 COMPLETED 并记录 completed_at 时间，同时返回一个极简的移动端 HTML 核销操作页面供店员手机浏览器直接使用。',
-            deliverable: '0.01 元真实微信支付 ➔ 生成6位自提码 ➔ 店员手机1秒核销 全链路跑通上线'
+            prompt: '【发给 Grokbot】：请写30段针对周边3公里居民的抖音本地生活直播间口播稿，既推9.9元到店自提引流券，又反复提醒“不想下楼的邻居直接微信搜爱尚佳小程序，全店3000种蔬菜水果日用百货比外卖平台便宜15%，达达顺丰骑手半小时送到家”。',
+            deliverable: '4080 主机虚拟直播与短视频自动混剪流水线在家测试 100% 跑通'
           }
         ]
       },
+
+      // ==================== 第二部分：接手后·门店物理落地期 ====================
       {
         stageId: 'S4',
-        stageTitle: '阶段四：企业微信私域池 + AI Agent 全自动社群运营与秒赔',
-        stagePeriod: 'Day 26 - Day 35',
-        stageDesc: '坚决不用个人微信号挂外挂防封号！用免费企业微信 + 官方群机器人 + Grokbot + Gemini 视觉实现全自动发群与售后。',
+        phase: 'store',
+        phaseBadge: '🏪 接手后·进店实操 (带6员工+第三方骑手)',
+        stageTitle: '阶段四（接手第1周）：思迅 3000+ 全品打通、美团饿了么上线与骑手闪电取货台',
+        stagePeriod: 'Day 21 - Day 27',
+        stageDesc: '正式接手门店！导出思迅天店全量数据清洗上线，砍掉盲目周三 88 折，在门口设立第三方骑手 3 秒闪电取货台。',
         nodes: [
           {
             id: '4.1',
-            title: '企微业主群架构搭建与“线下收银+美团外卖”双漏斗洗客',
-            days: 'Day 26 - Day 28',
-            roles: ['me', 'grokbot', 'agent'],
-            myActions: [
-              '注册免费企业微信，建立“爱尚佳·XX小区邻里严选1群/2群”，开启群内官方 Webhook 机器人。',
-              '督促收银员执行“扫码进群本单立减 2 元 / 送鸡蛋”，外卖每单必放“进群成箱水直降 10 元”卡片，沉淀首批 200 名本小区铁杆邻居。'
+            title: '正式接手：导出思迅天店 3000+ 全品流水，一键同步“小程序+美团+饿了么”',
+            days: 'Day 21 - Day 23',
+            roles: ['leader', 'me', 'staff_fresh', 'cursor', 'agent'],
+            leaderCmd: '吞吐思迅天店近 3 个月全量收银流水，揪出周三 88 折亏本赚吆喝的出血商品，自动生成三端上架表（自有小程序全品低价 vs 美团饿了么高价防亏）。',
+            physicalActions: [
+              '【👤 我本人】：接手门店收银电脑，从思迅天店导出《全店商品档案与近90天流水.xlsx》丢进监听文件夹，审阅 AI 大领导发来的毛利诊断回执。',
+              '【👨‍🔧 员工3-4号(理货岗)】：配合盘点核对生鲜果蔬与高周转百货实际库存，剔除有库存记录但实际已破损的死库存。'
             ],
-            aiActions: [
-              { role: 'grokbot', task: '编写入群自动欢迎语（公布每日早9点/晚8点半特卖时间表、门店自提位置指引、小程序领券入口）。' },
-              { role: 'agent',   task: '配置 n8n 或 Python 群推送连接器，测试企微 Webhook 图文卡片与小程序深层路径推送。' }
+            onlineActions: [
+              { role: 'agent',  task: 'ai_leader_daemon.py 自动读取思迅 Excel 喂给 Gemini API，10秒内向总经理微信发送《毛利出血点诊断与3000+商品双轨定价表》。' },
+              { role: 'cursor', task: '运行导入脚本，将 3000+ 商品一键同步上架至自有全品类小程序、美团商家版与饿了么后台。' }
             ],
-            prompt: '【发给 Grokbot】：请帮我写一段邻居扫码加入“爱尚佳生活超市业主严选群”时的自动欢迎语。口吻要是实在、热情的楼下超市王店长，告诉邻居：1.点下方小程序链接直接领3元无门槛券；2.每天早9点群里发刚到的新鲜果蔬、晚8点半发日清打折烘焙鲜奶；3.买满39元每天中午12:30和晚上21:00免费送上楼。',
-            deliverable: '企微业主群突破 200 人，Webhook 自动发卡通道测试成功'
+            prompt: '【进店第1天发给 AI大领导 (Gemini)】：这是我刚从门店思迅天店导出的全店3000款商品档案及过去一个月（含4个周三88折）的销售流水表。请帮我：1.算清周三88折到底亏在了哪20款刚需标品上；2.生成全店商品的小程序会员价与美团饿了么外卖防亏价。',
+            deliverable: '自有全品类小程序 + 美团闪购 + 饿了么超市 三端 3000+ 商品同步上线营业'
           },
           {
             id: '4.2',
-            title: '每日早中晚 3 波次 AI 自动生成店长推文并定时发群',
-            days: 'Day 29 - Day 32',
-            roles: ['me', 'grokbot', 'agent'],
-            myActions: [
-              '每天早上确认今日主推的 3~5 款爆品库存已录入小程序，其余发群动作全部交给自动化脚本。'
+            title: '卖场设“里侧顾客自提区” + “门口第三方骑手 3秒闪电取货台”',
+            days: 'Day 24 - Day 25',
+            roles: ['leader', 'me', 'staff_picker', 'cursor'],
+            leaderCmd: '严格分离动线：进店自提顾客往里走（穿过主通道带动连带消费）；美团/饿了么/顺丰/达达骑手在门口外侧取货（报号拎袋 3 秒即走，绝不堵塞收银台）。',
+            physicalActions: [
+              '【👤 我本人】：在超市出口靠门处设立 2 米长的【外卖与同城骑手闪电取货架】（按 #01~#20 编号），在卖场内侧设【邻居自提核销区】。',
+              '【📦 员工5-6号(店内拣货打包岗)】：熟悉小票打印机与手机 `/staff` 拣货台，明确自己只管店内拣货装袋放上取货架，绝不出店跑腿！'
             ],
-            aiActions: [
-              { role: 'grokbot', task: '严格设定 System Prompt 为“楼下经营五年的实在超市老板”（严禁出现“尊贵的顾客”等机械 AI 腔），结合当日天气与库存自动生成 3 波文案：09:00 早市鲜货、16:30 晚餐快手菜、20:30 晚间临期日清与次日预售。' },
-              { role: 'agent',   task: '通过定时任务在 09:00 / 16:30 / 20:30 自动调取 Grokbot 接口与小程序商品链接，准时推送至所有业主群。' }
+            onlineActions: [
+              { role: 'cursor', task: '配置热敏小票打印模板：自动超大字号打印【#顺丰08 / #达达12 / #美团05】取货大号与商品核对条码。' }
             ],
-            prompt: '【发给 Grokbot (System Prompt)】：你现在是北京爱尚佳生活超市的老板老王，跟本小区邻居特别熟，说话接地气、实在、有烟火气，绝对禁止使用“尊贵的顾客”、“竭诚为您”等AI套话。请根据输入的[今日主推商品JSON]和[今日天气]，分别生成 09:00早市生鲜、16:30下班快手菜、20:30晚间出清 三条80字以内的群推文，每条末尾附上小程序下单引导。',
-            deliverable: '实现每日早中晚 3 次全自动暖群推品，零人工复制粘贴且合规不封号'
+            prompt: '【发给 AI大领导】：请为员工5号和6号生成一份贴在打包台墙上的《全品类订单8分钟极速拣货+塞洗客卡+呼叫顺丰/达达骑手标准操作卡》。',
+            deliverable: '门口骑手闪电取货台就绪，第三方骑手到店报号 3 秒拿袋即走'
           },
           {
             id: '4.3',
-            title: '社群 @小助手 智能导购与“生鲜坏果 15 元内视觉秒赔”',
-            days: 'Day 33 - Day 35',
-            roles: ['me', 'agent', 'gemini', 'cursor'],
-            myActions: [
-              '设定生鲜售后免审红线：单笔订单赔付金额 ≤ 15 元且无恶意退货记录的熟客，授权 AI 直接发无门槛补偿券；超过 15 元转人工我本人确认。'
+            title: '砍掉粗暴周三全场 88 折，全店货架铺设“用本店小程序买便宜 15%”爆炸贴',
+            days: 'Day 26 - Day 27',
+            roles: ['leader', 'me', 'staff_fresh', 'staff_cashier', 'grokbot'],
+            leaderCmd: '终结周三全场 88 折毛利失血！改为“每日早7点 AI 比价选 5 款民生爆品引流 + 全店 3000 款商品小程序常年比外卖平台便宜 15% + 会员日满额免骑手运费”。',
+            physicalActions: [
+              '【👤 我本人】：正式贴出公告升级会员福利，停止盲目全场打折。',
+              '【👨‍🔧 员工3-4号(理货岗)】：在粮油、水饮、日化、休闲零食货架挂满双价签爆炸贴（标明：美团外卖价 vs 本店小程序自提/送到家特惠价）。',
+              '【👩‍💼 员工1-2号(收银岗)】：对询问周三折扣的老客解释：“姐，现在不用苦等周三了！直接扫咱们小程序，天天都有5款批发生鲜价，而且买满额直接叫顺丰/达达骑手给您送到家门口！”'
             ],
-            aiActions: [
-              { role: 'agent',  task: '挂载小程序实时在售商品库，邻居在群内提问“今天排骨多少钱？”、“做酸菜鱼要买啥？”，5秒内自动回复价格与一键加购组合链接。' },
-              { role: 'gemini', task: '调用 Gemini 多模态视觉 API 审查顾客私聊发来的坏果/压伤照片，自动评估腐损比例（如 >20%），确认属实后自动调用后端接口发放等额无门槛券并温言安抚。' },
-              { role: 'cursor', task: '在后端编写自动发券与小额售后补偿接口 /api/aftersale/auto-compensate。' }
+            onlineActions: [
+              { role: 'grokbot', task: '每早 07:00 根据周边竞对价格与天气，生成今日 5 款引流民生品海报文案发入业主群。' }
             ],
-            prompt: '【发给 Gemini 视觉 API】：请作为生鲜超市售后质检员分析这张顾客上传的水果/生鲜实拍图。1.判断是否为真实实拍生鲜腐烂/挤压破损；2.估算受损果粒占整份商品的比例（0~100%）；3.输出 JSON 格式：{"is_damaged": true, "damage_ratio": 0.25, "suggest_refund_ratio": 0.3, "reply_msg": "姐实在不好意思，这盒草莓底下压坏了两颗，刚直接给您小程序账户塞了一张8元无门槛补偿券，下次自提直接抵扣！"}',
-            deliverable: '社群询价 5 秒内自动应答，15 元内生鲜小额坏果实现零扯皮全自动秒赔'
+            prompt: '【发给 Grokbot】：店里以前每周三搞全场88折导致毛利严重亏损，现在我们升级为“天天5款民生爆品底价 + 小程序全品类会员价 + 满额免费叫骑手送到家”。请帮我写一段贴在收银台和发在业主群里的《福利全面升级公告》，让老邻居觉得更划算而不是福利缩水。',
+            deliverable: '全店综合毛利率立即止血回升 +3%~4%，老客顺利过渡到小程序日常复购'
           }
         ]
       },
       {
         stageId: 'S5',
-        stageTitle: '阶段五：RTX 4080 本地 24h 虚拟主播带货 + 短视频自动混剪',
-        stagePeriod: 'Day 36 - Day 45',
-        stageDesc: '充分榨干现有的 RTX 4080 + 32G 高配主机算力，零成本 24 小时开播洗周边 3 公里同城公域流量到店核销。',
+        phase: 'store',
+        phaseBadge: '🏪 接手后·进店实操 (带6员工+第三方骑手)',
+        stageTitle: '阶段五（接手第2~3周）：外卖包裹 100% 塞卡洗客、店员一键呼骑手、AI 社群全托管',
+        stagePeriod: 'Day 28 - Day 37',
+        stageDesc: '把美团/饿了么变成给小程序输血的免费奶牛！拣货员按 AI 最优货架路线 8 分钟打包并一键呼叫顺丰/达达骑手。',
         nodes: [
           {
             id: '5.1',
-            title: '利用本地 4080 主机部署 24 小时虚拟店长本地生活直播间',
-            days: 'Day 36 - Day 40',
-            roles: ['me', 'grokbot', 'agent'],
-            myActions: [
-              '用手机在超市生鲜区、冷柜前拍摄 10 分钟高清明亮的实景循环视频作为直播背景。',
-              '开通抖音本地生活团购与微信视频号小店挂载权限，上架 10 款极致引流自提券（如 9.9 元 15 枚鸡蛋券、19.9 元原箱橙子券）。'
+            title: '美团/饿了么包裹 100% 钉比价洗客卡 + 收银台截流 400 客流进小程序',
+            days: 'Day 28 - Day 31',
+            roles: ['leader', 'me', 'staff_cashier', 'staff_picker', 'agent'],
+            leaderCmd: '严格监控“公域洗私域转化率”：美团/饿了么每出 100 单，必须至少有 30 人扫码进咱们的小程序/企微群！按每成功拉新 1 人奖励员工 0.5 元自动计提奖金。',
+            physicalActions: [
+              '【📦 员工5-6号(打包岗)】：打包任何美团、饿了么订单时，必须往袋子里放一张《小程序便宜15%比价卡》，并在外卖小票旁再钉一张“扫码领首单免运费+送鸡蛋券”副券！',
+              '【👩‍💼 员工1-2号(收银岗)】：对每天进店结账的 400 位顾客口播引导：“扫台卡进咱们小区群/小程序，本单立减 2 元，以后全店 3000 种东西手机一点，骑手半小时给您送上楼！”'
             ],
-            aiActions: [
-              { role: 'grokbot', task: '根据 50 款爆品台账，批量生成 100 段口语化、带逼单节奏的直播口播稿（含报价格、算差价、指引“爱尚佳生活超市二楼自提”路线）及 50 条高频弹幕问答库。' },
-              { role: 'agent',   task: '在本地 RTX 4080 电脑上运行数字人推流软件 + 本地 TTS 语音合成，实现 24 小时不间断循环讲解，并自动捕获公屏弹幕问“店在哪/怎么拿”进行实时语音回复。' }
+            onlineActions: [
+              { role: 'agent', task: '通过带渠道参数的活码，自动区分是“收银员1-2号面对面拉新”还是“打包员5-6号外卖塞卡拉新”，自动发放小程序全品类新人券包并记入对应员工绩效。' }
             ],
-            prompt: '【发给 Grokbot】：请根据我店里这 10 款引流爆品的参数，为抖音同城本地生活直播间编写每款 200 字的促单口播稿。要求：每段开头用“刷到就是本小区邻居”留人，中间算清线下原价和直播间自提券的差价，结尾强调“拍下后下班顺路来爱尚佳二楼提货，坏果包退”。',
-            deliverable: '本地 4080 主机稳定推流，抖音/视频号每日开播 12~24 小时零场租获客'
+            prompt: '【发给 AI大领导】：这是本周美团/饿了么出单量（350单）与通过外卖包裹卡扫码进入我们小程序下单的新客统计（112人），请核算打包员5-6号与收银员1-2号的拉新奖金，并分析哪类外卖顾客最容易被转化到小程序？',
+            deliverable: '每天从线下 400 客流 + 美团饿了么外卖单中稳定洗入 60~80 位本小区小程序新用户'
           },
           {
             id: '5.2',
-            title: '每日生鲜到货 15 秒同城短视频 AI 自动混剪流水线',
-            days: 'Day 41 - Day 43',
-            roles: ['me', 'cursor', 'grokbot', 'agent'],
-            myActions: [
-              '每天早上生鲜到货开箱时，随手用手机拍 3 段 5 秒钟的“切开水果爆汁、成箱牛奶卸货、排骨剁块”原片，丢进电脑 D:\\raw_videos 文件夹。'
+            title: '拣货员 5-6 号按“AI 最优货架路线”极速打包 + 手机点【呼叫骑手】实跑',
+            days: 'Day 32 - Day 34',
+            roles: ['leader', 'staff_picker', 'cursor', 'agent'],
+            leaderCmd: '3000+ 全品类超市最怕店员找货慢！AI 根据商品所在货架编号（1号生鲜区 ➔ 2号冷藏柜 ➔ 3号粮油区 ➔ 4号日百区）自动排序拣货单，让店员不走回头路 6 分钟内拣齐一单。',
+            physicalActions: [
+              '【📦 员工5-6号(打包岗)】：手机收到新订单语音播报 ➔ 看着 `/staff` 手机页（商品已按 1~8 号货架顺路排好）推小车一趟拣齐 ➔ 扫码复核防漏装 ➔ 放上门口取货架并点手机大按钮 **【打包完成·呼叫第三方骑手】**。'
             ],
-            aiActions: [
-              { role: 'cursor',  task: '编写基于 Python + FFmpeg 的自动化混剪脚本 auto_clip.py，自动检测文件夹新视频、裁剪竖屏比例、拼接转场。' },
-              { role: 'grokbot', task: '生成极具同城吸睛力的前 3 秒黄金钩子文案与大字报标题（如“住在XX小区的邻居别去大超市挨宰了！”）。' },
-              { role: 'agent',   task: '自动调用 TTS 生成配音字幕，一键合成 3 条 15 秒成品短视频供一键发布挂载门店定位。' }
+            onlineActions: [
+              { role: 'cursor', task: '在 /staff 拣货页实现按 shelf_code（货架号）自动升序排列商品，并提供一键调用顺丰同城/达达/蜂鸟比价发单接口。' },
+              { role: 'agent',  task: '监控骑手接单状态：若下雨天超过 3 分钟无骑手接单，AI 自动加价 2 元小费重发，并向顾客微信推送“骑手已接单正在赶往超市”实时地图轨迹。' }
             ],
-            prompt: '【发给 Cursor (Ask模式)】：请帮我写一个基于 Python moviepy / ffmpeg 的短视频自动混剪脚本 auto_clip.py：自动读取指定目录下的 3 段 .mp4 素材拼接成 15 秒竖屏视频(1080x1920)，并合并一段 AI 生成的 mp3 配音，在画面上方居中叠加醒目的黄底黑字促销标题。',
-            deliverable: '每天仅花 1 分钟随手拍画面，AI 自动产出 3 条带同城定位的爆款短视频'
+            prompt: '【发给 Cursor (Ask模式)】：请优化员工手机端 /staff 的拣货列表接口：当一笔全品类订单包含15件不同商品时，自动按照 products 表中的 shelf_zone（货架分区编号 A01~H20）升序排列展示，让店员从超市里侧向门口单向走一趟即可全部拿齐，并在底部放置醒目的【打包完成·一键比价呼叫顺丰/达达骑手】按钮。',
+            deliverable: '全品类 15 件商品大单店员 6 分钟内拣齐，第三方骑手平均 25 分钟送达顾客家门'
           },
           {
             id: '5.3',
-            title: '直播间公域团购券到店核销 ➔ 私域企微群二次沉淀',
-            days: 'Day 44 - Day 45',
-            roles: ['me', 'gemini'],
-            myActions: [
-              '规定核销铁律：凡是刷抖音/视频号买券到店提货的新客，店员核销时必须引导“顺手扫一下进咱们小区群，下次直接在群里小程序买更便宜还免平台手续费”。'
+            title: '理货员早拍视频/晚拍剩菜触发 AI 日清 + 15元内坏果秒赔 + 3000品智能导购',
+            days: 'Day 35 - Day 37',
+            roles: ['leader', 'staff_cashier', 'staff_fresh', 'grokbot', 'agent'],
+            leaderCmd: '全面接管微信群全品类导购、晚间生鲜零损耗日清与小额坏果视觉秒赔。',
+            physicalActions: [
+              '【👨‍🔧 员工3-4号(理货岗)】：早开箱拿手机随手拍 3 段 5 秒水果/肉类视频发内部群；每晚 20:00 拍没卖完的叶菜/鲜奶/熟食发群，语音说一句剩余数量（如“菠菜剩10把、烤鸡剩3只”）。',
+              '【👩‍💼 员工1-2号(收银岗)】：顾客到店自提时输 6 位码 1 秒核销；仅处理 >15 元的大额售后弹窗。'
             ],
-            aiActions: [
-              { role: 'gemini', task: '每周分析抖音/视频号核销时间分布与转私域留存率，优化直播间主推引流品组合。' }
+            onlineActions: [
+              { role: 'agent',   task: '社群 @小助手 挂载全店 3000+ 商品库：邻居在群里问“店里有某牌酱油/5号电池/猫砂吗？”，Agent 3 秒内查库回复现价并甩出小程序链接，下单直接叫骑手送！' },
+              { role: 'grokbot', task: '晚 20:00 收到理货员尾货语音后，自动将小程序对应商品改价 6 折并生成“老王店长晚间日清捡漏”推文发进所有业主群。' }
             ],
-            prompt: '【发给 Gemini】：这是本周抖音本地生活直播间引流到店核销的 150 单数据与转入企微群的统计表，请帮我分析哪款引流券带来的客户复购率最高，下周应该保留哪款、替换哪款？',
-            deliverable: '公域直播买券新客到店转企微私域率达到 60% 以上'
+            prompt: '【业主群邻居提问】：“@爱尚佳小助手 家里没盐和洗洁精了，再带两盒纯牛奶和一斤排骨，店里都有吗？能现在送过来吗？”\n【AI Agent 自动查3000品库秒回】：“姐都有现货！中盐2元+立白洗洁精6.9元+特仑苏2盒+新鲜前排19.8元，合计48.5元已帮您生成一键加购清单👉[点此小程序直接付款]，满39元免基础运费，您付款后店员5分钟打包好交达达骑手，约25分钟送到您家门口！”',
+            deliverable: '群内 3000+ 全品类询价 3 秒自动成交，晚间生鲜日清损耗率砍半'
           }
         ]
       },
       {
         stageId: 'S6',
-        stageTitle: '阶段六：全链路压测、试营业裂变引爆与 GitHub/Gemini 云端复盘',
-        stagePeriod: 'Day 46 - Day 60',
-        stageDesc: '跑顺“自提 + 本小区满39元定时手推车送上门”履约闭环，每晚 22:00 由 AI 自动生成经营日报淘汰滞销品。',
+        phase: 'store',
+        phaseBadge: '🏪 接手后·进店实操 (带6员工+第三方骑手)',
+        stageTitle: '阶段六（接手第4周起）：24h 虚拟直播白嫖公域、AI 凑单提客单与每晚 22:00 扭亏复盘',
+        stagePeriod: 'Day 38 - Day 45',
+        stageDesc: '用 AI 凑单把小程序客单价从 25 元拉升到 50 元+（彻底摊薄第三方骑手运费），每晚 22:00 由 AI 大领导出全渠道扭亏日报。',
         nodes: [
           {
             id: '6.1',
-            title: '本小区“满 39 元定时手推车送上门”与按楼栋合单拣货',
-            days: 'Day 46 - Day 50',
-            roles: ['me', 'cursor'],
-            myActions: [
-              '严格划定配送圈：仅限本超市所在小区及紧邻 2 个直对小区“满 39 元免运费”，绝不承诺全城半小时达。',
-              '规定每天固定 12:30 和 21:00 两个非繁忙波次，由店员推手推车按楼栋集中送一趟，彻底省去第三方跑腿费。'
+            title: '门店开启 24h 虚拟店长直播 + 每日 3 条混剪短视频白嫖同城流量',
+            days: 'Day 38 - Day 40',
+            roles: ['leader', 'me', 'staff_fresh', 'staff_cashier', 'agent'],
+            leaderCmd: '用 4080 主机 24h 直播洗抖音/视频号周边 3 公里流量，到店核销或外卖下单后一律洗入自有全品类小程序。',
+            physicalActions: [
+              '【👨‍🔧 员工3-4号】：拍一段 10 分钟门店整洁货架实景视频替换进 4080 直播间背景。',
+              '【👩‍💼 员工2号(收银岗)】：每天把 AI 群里自动剪好的 3 条 15 秒短视频点发布，挂载门店团购与定位。'
             ],
-            aiActions: [
-              { role: 'cursor', task: '在小程序店主端后台开发“按小区+楼栋号自动聚类汇总拣货单”接口，将同一栋楼的订单合并打印在一张单子上，店员进一栋楼一次送完。' }
+            onlineActions: [
+              { role: 'agent', task: '24 小时数字人循环播报爆品与“微信搜爱尚佳小程序全店3000种商品骑手送到家”，自动语音回复公屏弹幕。' }
             ],
-            prompt: '【发给 Cursor (Ask模式)】：请帮我在 FastAPI 后端写一个配送拣货单汇总接口 GET /api/admin/delivery-sheet，查询当前所有状态为 PAID 且 delivery_mode="DELIVERY" 的订单，按 community_name 和 building_unit_room 自然排序分组，输出一张适合手机查看和打印的合并商品总拣货清单与逐户派送表。',
-            deliverable: '定时手推车集中配送跑通，单波次 30 单可在 40 分钟内零跑腿费送完'
+            prompt: '【发给 AI大领导】：请统计本周通过抖音24h虚拟直播间与同城短视频引流到店及转入小程序的客户数。',
+            deliverable: '抖音/视频号同城曝光每日破万，零人工主播成本持续吸血公域'
           },
           {
             id: '6.2',
-            title: '开业“老带新进群领土鸡蛋”裂变引爆与高并发压测',
-            days: 'Day 51 - Day 55',
-            roles: ['me', 'grokbot', 'cursor', 'agent'],
-            myActions: [
-              '准备 300 盒引流鲜鸡蛋，发起“本小区老客拉 2 位同小区邻居进群，双双得 0.01 元提鸡蛋券”裂变活动。',
-              '在晚高峰自提时段坐镇自提区，检验尾号 0~9 货架分拣效率与 6 位自提码核销速度。'
+            title: '小程序“AI 购物车智能凑单 + 整箱多规格”把客单价从 25元 拉升至 50元+',
+            days: 'Day 41 - Day 43',
+            roles: ['leader', 'me', 'staff_picker', 'cursor', 'agent'],
+            leaderCmd: '算清骑手运费账：叫一次顺丰/达达骑手固定要花约 5 元；如果顾客只买 20 元东西，运费占 25% 会亏本；只要用 AI 凑单把配送单客单价拉升到 50~60 元，门店补贴 3 元运费仅占 5%，净毛利稳拿 18%+！',
+            physicalActions: [
+              '【👤 我本人】：设置配送门槛阶梯（到店自提 0 门槛且送 2 元券；第三方骑手送上门：满 39 元门店补贴基础运费、满 69 元全免运费）。',
+              '【📦 员工5-6号(打包岗)】：对大客单/整箱水奶订单使用加厚袋打包，方便第三方骑手电动车踏板装载。'
             ],
-            aiActions: [
-              { role: 'grokbot', task: '撰写裂变活动群接龙造势文案与晒单返券话术。' },
-              { role: 'cursor',  task: '检查 SQLite WAL 并发锁与库存事务，确保晚 20:30 秒杀抢购时零死锁、零超卖。' },
-              { role: 'agent',   task: '实时在群内播报剩余库存（如“今日特惠草莓仅剩最后 8 盒”），拉满邻里抢购氛围。' }
+            onlineActions: [
+              { role: 'cursor', task: '在小程序购物车结算栏开发 AI 动态凑单推荐条：“还差 8.5 元即可免骑手配送费，90%邻居顺手加了【3.5元金针菇 / 5.9元抽纸 / 9.9元鲜鸡蛋】”。' }
             ],
-            prompt: '【发给 Grokbot】：请帮我写一套为期3天的“爱尚佳超市邻里老带新裂变”社群活动方案与群内接龙话术。核心机制：老群友邀请2位住在咱们小区的邻居进群并在小程序下单任意商品，老群友直接得一张“1分钱领8枚鲜土鸡蛋”自提券。',
-            deliverable: '单周新增本小区精准业主 500+ 人，高峰期核销每位顾客耗时 < 15 秒'
+            prompt: '【发给 Cursor (Ask模式)】：请在小程序购物车页面增加一个智能凑单推荐模块：当用户选择了“送货上门”且当前购物车金额处于 25元~68元 之间时，自动从全品类库中检索价格恰好等于（免运门槛 - 当前金额 + 2元）的高毛利高频日百/生鲜单品展示在购物车底部，支持一键点击“+凑单免运费”。',
+            deliverable: '小程序配送单平均客单价突破 52 元，第三方骑手运费占比压降至 6% 以内'
           },
           {
             id: '6.3',
-            title: '每晚 22:00 AI 经营日报与 Gemini 云端知识库自动复盘',
-            days: 'Day 56 - Day 60',
-            roles: ['me', 'github', 'gemini'],
-            myActions: [
-              '每晚 22:00 闭店前花 3 分钟查看企微上的《当日线上毛利与自提核销率日报》，拍板次日下架哪款滞销品、补货哪款爆品。',
-              '每周点击本页面顶部【☁️ 复制云端同步口令】发给 Gemini，将最新实战数据沉淀至云端【超市生存法则】笔记本。'
+            title: '每晚 22:00 AI 大领导生成《全渠道扭亏日报（小程序 vs 美团饿了么 vs 线下）》',
+            days: 'Day 44 - Day 45 (常态化)',
+            roles: ['leader', 'me', 'github', 'agent'],
+            leaderCmd: '每晚 22:00 自动汇总四本账：① 思迅天店线下收银流水、② 自有全品类小程序订单、③ 美团/饿了么账单、④ 顺丰/达达第三方骑手运费账单，出具《今日净毛利、公域洗客率、骑手运费占比与6员工绩效日报》。',
+            physicalActions: [
+              '【👤 我本人】：每晚 22:00 在手机微信上看一眼 AI 大领导发来的全店日报，在员工群给今日“拉新冠军/极速打包王”发红包，每周点顶部【☁️ 复制同步口令】归档云端。'
             ],
-            aiActions: [
-              { role: 'github', task: '每晚 21:50 自动备份当日 SQLite 订单数据库快照并统计各单品销量、毛利额、未提货率。' },
-              { role: 'gemini', task: '结合思迅天店线下流水与小程序线上数据，识别“高浏览低加购”价格虚高品与“高损耗”生鲜品，输出《下周 50 款爆品末位淘汰与换购清仓建议》。' }
+            onlineActions: [
+              { role: 'agent',  task: 'ai_leader_daemon.py 每晚 21:55 自动读取各端报表调用 Gemini API 生成日报推送到总经理微信。' },
+              { role: 'github', task: '自动备份全店数据库与 3000+ 商品动销权重。' }
             ],
-            prompt: '【发给 Gemini】：这是我从本页面导出的最新节点执行状态与本周小程序50款爆品的销售、毛利、损耗汇总表。请帮我更新云端【超市生存法则】笔记本台账，并按末位淘汰原则指出哪5款商品下周应该下架替换，哪3款适合做满额换购清仓？',
-            deliverable: '首月沉淀 1000+ 周边铁杆业主私域，线上零佣金收入占全店营收 20% 以上'
+            prompt: '【每晚 22:00 自动发给 AI大领导 (Gemini API)】：以下是今日思迅天店流水、小程序全品类订单、美团饿了么导出单及达达/顺丰骑手扣费明细。请生成《爱尚佳超市今日经营与扭亏日报》：1.全店总营收（对比接手前1万元基准线）与真实净毛利额；2.美团饿了么洗客进小程序转化率；3.第三方骑手单均运费占比；4.员工1-6号今日绩效得分与明日3000品库存补货/汰换指令。',
+            deliverable: '60天内将门店日均营业额从 1.0 万推升至 1.6 万~1.8 万，净毛利率稳居 20%+ 全面扭亏为盈'
           }
         ]
       }
     ];
 
     let appState = {
-      completed: {},
+      completed: { '1.1': true },
       notes: {},
-      completedAt: {},
-      roleFilter: 'all'
+      completedAt: { '1.1': '2026/10/16' },
+      roleFilter: 'all',
+      phaseFilter: 'all'
     };
 
     function loadState() {
@@ -608,12 +638,12 @@
         const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) {
           const parsed = JSON.parse(raw);
-          appState.completed = parsed.completed || {};
+          appState.completed = parsed.completed || { '1.1': true };
           appState.notes = parsed.notes || {};
-          appState.completedAt = parsed.completedAt || {};
+          appState.completedAt = parsed.completedAt || { '1.1': '2026/10/16' };
         }
       } catch (e) {
-        console.error('Failed to load state', e);
+        console.error(e);
       }
     }
 
@@ -624,8 +654,8 @@
         completedAt: appState.completedAt
       }));
       const now = new Date().toLocaleTimeString('zh-CN', { hour12: false });
-      document.getElementById('lastSavedText').textContent = `已自动保存于本地 (${now})`;
-      updateStatsBar();
+      document.getElementById('lastSavedText').textContent = `已自动保存 (${now})`;
+      updateProgressBar();
     }
 
     function toggleNode(nodeId) {
@@ -636,7 +666,7 @@
       } else {
         appState.completed[nodeId] = true;
         appState.completedAt[nodeId] = new Date().toLocaleDateString('zh-CN');
-        showToast(`✅ 恭喜完成 节点 ${nodeId}！进度已保存`);
+        showToast(`✅ 节点 ${nodeId} 已完成！`);
       }
       saveState();
       renderRoadmap();
@@ -649,114 +679,102 @@
 
     function setRoleFilter(role) {
       appState.roleFilter = role;
-      document.querySelectorAll('.role-btn').forEach(btn => {
-        if (btn.dataset.role === role) {
-          btn.classList.add('bg-sky-600', 'text-white', 'ring-2', 'ring-sky-400');
-          btn.classList.remove('bg-slate-800');
-        } else {
-          btn.classList.remove('bg-sky-600', 'text-white', 'ring-2', 'ring-sky-400');
-          btn.classList.add('bg-slate-800');
-        }
-      });
+      appState.phaseFilter = 'all';
+      highlightFilterBtn(role);
       renderRoadmap();
     }
 
-    function updateStatsBar() {
-      let totalNodes = 0;
-      let doneNodes = 0;
-      const roleCounters = {
-        me: { total: 0, done: 0 },
-        gemini: { total: 0, done: 0 },
-        cursor: { total: 0, done: 0 },
-        grokbot: { total: 0, done: 0 },
-        agent: { total: 0, done: 0 },
-        github: { total: 0, done: 0 }
-      };
+    function setPhaseFilter(phase) {
+      appState.phaseFilter = phase;
+      appState.roleFilter = 'all';
+      highlightFilterBtn('phase_' + phase);
+      renderRoadmap();
+    }
 
-      STAGES_DATA.forEach(stage => {
-        stage.nodes.forEach(node => {
-          totalNodes++;
-          const isDone = !!appState.completed[node.id];
-          if (isDone) doneNodes++;
-          node.roles.forEach(r => {
-            if (roleCounters[r]) {
-              roleCounters[r].total++;
-              if (isDone) roleCounters[r].done++;
-            }
-          });
-        });
+    function highlightFilterBtn(activeKey) {
+      document.querySelectorAll('.role-btn').forEach(btn => {
+        if (btn.dataset.role === activeKey) {
+          btn.classList.add('ring-2', 'ring-sky-400', 'bg-sky-600', 'text-white');
+        } else {
+          btn.classList.remove('ring-2', 'ring-sky-400', 'bg-sky-600', 'text-white');
+        }
       });
+    }
 
-      const pct = totalNodes ? Math.round((doneNodes / totalNodes) * 100) : 0;
-      document.getElementById('progressText').textContent = `已完成 ${doneNodes} / ${totalNodes} 个核心节点 (${pct}%)`;
+    function updateProgressBar() {
+      let total = 0, done = 0;
+      STAGES_DATA.forEach(s => s.nodes.forEach(n => {
+        total++;
+        if (appState.completed[n.id]) done++;
+      }));
+      const pct = total ? Math.round((done / total) * 100) : 0;
+      document.getElementById('progressText').textContent = `已完成 ${done} / ${total} 个核心节点 (${pct}%)`;
       document.getElementById('progressBar').style.width = `${pct}%`;
+    }
 
-      const statsBar = document.getElementById('roleStatsBar');
-      statsBar.innerHTML = Object.keys(ROLE_META).map(rKey => {
-        const meta = ROLE_META[rKey];
-        const c = roleCounters[rKey];
-        return `<span onclick="setRoleFilter('${rKey}')" class="cursor-pointer px-2 py-1 rounded border ${meta.badgeClass} hover:opacity-80 transition">
-          ${meta.label}: <b>${c.done}/${c.total}</b>
-        </span>`;
-      }).join('');
+    function toggleSection(bodyId, btnId) {
+      const el = document.getElementById(bodyId);
+      const btn = document.getElementById(btnId);
+      if (el.classList.contains('hidden')) {
+        el.classList.remove('hidden');
+        btn.textContent = '收起 ▲';
+      } else {
+        el.classList.add('hidden');
+        btn.textContent = '展开 ▼';
+      }
     }
 
     function copyText(text, label) {
       navigator.clipboard.writeText(text).then(() => {
-        showToast(`📋 已复制 ${label}！可直接去粘贴使用`);
+        showToast(`📋 已复制 ${label}！`);
       });
     }
 
     function copyCloudSyncCommand() {
-      const doneList = [];
-      const todoList = [];
-      const notesList = [];
+      const doneList = [], todoList = [], notesList = [];
+      STAGES_DATA.forEach(s => s.nodes.forEach(n => {
+        if (appState.completed[n.id]) {
+          doneList.push(`- [x] 节点 ${n.id}：${n.title} (${appState.completedAt[n.id] || '已完成'})`);
+        } else {
+          todoList.push(`- [ ] 节点 ${n.id}：${n.title}`);
+        }
+        if (appState.notes[n.id] && appState.notes[n.id].trim()) {
+          notesList.push(`  * 节点 ${n.id} 备注：${appState.notes[n.id].trim()}`);
+        }
+      }));
 
-      STAGES_DATA.forEach(s => {
-        s.nodes.forEach(n => {
-          if (appState.completed[n.id]) {
-            doneList.push(`- [x] 节点 ${n.id}：${n.title} (完成于 ${appState.completedAt[n.id] || '今日'})`);
-          } else {
-            todoList.push(`- [ ] 节点 ${n.id}：${n.title}`);
-          }
-          if (appState.notes[n.id] && appState.notes[n.id].trim()) {
-            notesList.push(`  * 节点 ${n.id} 备注：${appState.notes[n.id].trim()}`);
-          }
-        });
-      });
-
-      const syncCmd = [
-        `【爱尚佳超市 AI 规划看板 · 云端同步指令】`,
-        `请根据以下最新进度，更新我在云端 NotebookLM【超市生存法则】中的节点打勾状态，并给我下一步执行建议：`,
+      const cmd = [
+        `【V4.0 向 AI 大领导 (Gemini) 汇报最新进度】`,
+        `当前战略：接手前远程先行 + 3000+全品类0扣点小程序 + 美团饿了么公域洗客 + 全接入第三方骑手`,
         `✅ 已完成节点 (${doneList.length}/18)：`,
-        doneList.length ? doneList.join('\n') : '  (暂无已完成节点)',
-        `📝 实战备注记录：`,
-        notesList.length ? notesList.join('\n') : '  (暂无备注)',
-        `⏳ 待推进节点 (${todoList.length}/18)：`,
-        todoList.slice(0, 5).join('\n') + (todoList.length > 5 ? '\n  ...其余待推进' : '')
+        doneList.join('\n') || '  (暂无)',
+        `📝 备注记录：`,
+        notesList.join('\n') || '  (暂无备注)',
+        `⏳ 下一步待推进远程/门店节点：`,
+        todoList.slice(0, 4).join('\n')
       ].join('\n');
 
-      copyText(syncCmd, 'Gemini 云端同步口令');
+      copyText(cmd, 'V4.0 云端汇报口令');
     }
 
     function exportProgressJSON() {
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
-      const dlAnchor = document.createElement('a');
-      dlAnchor.setAttribute("href", dataStr);
-      dlAnchor.setAttribute("download", `aishangjia_ai_progress_${new Date().toISOString().slice(0,10)}.json`);
-      document.body.appendChild(dlAnchor);
-      dlAnchor.click();
-      dlAnchor.remove();
-      showToast('💾 已导出进度 JSON 文件，可放入 GitHub 仓库备份！');
+      const a = document.createElement('a');
+      a.href = dataStr;
+      a.download = `aishangjia_v4_progress_${new Date().toISOString().slice(0,10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      showToast('💾 V4.0 进度 JSON 已导出！');
     }
 
-    function importProgressJSON(event) {
-      const file = event.target.files[0];
+    function importProgressJSON(e) {
+      const file = e.target.files[0];
       if (!file) return;
       const reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = function(ev) {
         try {
-          const parsed = JSON.parse(e.target.result);
+          const parsed = JSON.parse(ev.target.result);
           appState.completed = parsed.completed || {};
           appState.notes = parsed.notes || {};
           appState.completedAt = parsed.completedAt || {};
@@ -764,32 +782,20 @@
           renderRoadmap();
           showToast('📂 进度导入成功！');
         } catch (err) {
-          alert('JSON 文件格式有误，无法导入');
+          alert('文件格式错误');
         }
       };
       reader.readAsText(file);
     }
 
     function resetAllProgress() {
-      if (confirm('确定要清空所有打勾状态和节点备注吗？此操作不可撤销。')) {
-        appState.completed = {};
+      if (confirm('确定重置进度吗？（节点 1.1 将保留完成状态）')) {
+        appState.completed = { '1.1': true };
         appState.notes = {};
-        appState.completedAt = {};
+        appState.completedAt = { '1.1': '2026/10/16' };
         saveState();
         renderRoadmap();
-        showToast('已重置全部节点进度');
-      }
-    }
-
-    function toggleArchDiagram() {
-      const body = document.getElementById('archDiagramBody');
-      const btn = document.getElementById('toggleArchBtn');
-      if (body.classList.contains('hidden')) {
-        body.classList.remove('hidden');
-        btn.textContent = '收起架构图 ▲';
-      } else {
-        body.classList.add('hidden');
-        btn.textContent = '展开架构图 ▼';
+        showToast('已重置进度');
       }
     }
 
@@ -798,63 +804,70 @@
       t.textContent = msg;
       t.classList.remove('hidden');
       clearTimeout(window.__toastTimer);
-      window.__toastTimer = setTimeout(() => t.classList.add('hidden'), 2600);
+      window.__toastTimer = setTimeout(() => t.classList.add('hidden'), 2500);
     }
 
     function renderRoadmap() {
       const container = document.getElementById('roadmapContainer');
       const statusFilter = document.getElementById('statusFilter').value;
-      const keyword = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+      const kw = (document.getElementById('searchInput').value || '').trim().toLowerCase();
       const roleFilter = appState.roleFilter;
+      const phaseFilter = appState.phaseFilter;
 
       let html = '';
 
       STAGES_DATA.forEach(stage => {
-        const filteredNodes = stage.nodes.filter(node => {
+        if (phaseFilter !== 'all' && stage.phase !== phaseFilter) return;
+
+        const filtered = stage.nodes.filter(node => {
           const isDone = !!appState.completed[node.id];
           if (statusFilter === 'done' && !isDone) return false;
           if (statusFilter === 'todo' && isDone) return false;
           if (roleFilter !== 'all' && !node.roles.includes(roleFilter)) return false;
-          if (keyword) {
-            const haystack = [
-              node.id, node.title, ...node.myActions,
-              ...node.aiActions.map(a => a.task), node.prompt, node.deliverable,
-              appState.notes[node.id] || ''
+          if (kw) {
+            const text = [
+              node.id, node.title, node.leaderCmd,
+              ...node.physicalActions, ...node.onlineActions.map(a => a.task),
+              node.prompt, node.deliverable, appState.notes[node.id] || ''
             ].join(' ').toLowerCase();
-            if (!haystack.includes(keyword)) return false;
+            if (!text.includes(kw)) return false;
           }
           return true;
         });
 
-        if (filteredNodes.length === 0) return;
+        if (!filtered.length) return;
 
-        const stageDoneCount = stage.nodes.filter(n => !!appState.completed[n.id]).length;
+        const doneCount = stage.nodes.filter(n => !!appState.completed[n.id]).length;
+        const isRemote = stage.phase === 'remote';
 
         html += `
-          <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-5 shadow-xl">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 pb-4 border-b border-slate-800">
+          <div class="bg-slate-900/80 border-2 ${isRemote ? 'border-rose-500/40' : 'border-emerald-500/40'} rounded-2xl p-4 sm:p-5 shadow-xl">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3.5 border-b border-slate-800">
               <div>
-                <div class="flex items-center gap-2">
-                  <span class="px-2.5 py-0.5 text-xs font-extrabold rounded bg-sky-500/20 text-sky-300 border border-sky-500/30">${stage.stagePeriod}</span>
-                  <h3 class="text-lg font-extrabold text-white">${stage.stageTitle}</h3>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="px-2.5 py-0.5 text-xs font-black rounded ${isRemote ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40' : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'}">
+                    ${stage.phaseBadge}
+                  </span>
+                  <span class="px-2 py-0.5 text-xs font-mono font-bold rounded bg-slate-800 text-sky-300">${stage.stagePeriod}</span>
+                  <h3 class="text-base sm:text-lg font-extrabold text-white">${stage.stageTitle}</h3>
                 </div>
                 <p class="text-xs text-slate-400 mt-1">${stage.stageDesc}</p>
               </div>
-              <div class="text-xs font-bold px-3 py-1.5 rounded-lg bg-slate-800 text-emerald-400 self-start md:self-center">
-                本阶段进度：${stageDoneCount} / ${stage.nodes.length}
+              <div class="text-xs font-bold px-3 py-1 rounded-lg bg-slate-800 text-emerald-400 self-start sm:self-center shrink-0">
+                本阶段：${doneCount} / ${stage.nodes.length}
               </div>
             </div>
 
-            <div class="mt-5 space-y-5">
-              ${filteredNodes.map(node => renderNodeCard(node)).join('')}
+            <div class="mt-4 space-y-5">
+              ${filtered.map(n => renderNodeCard(n)).join('')}
             </div>
           </div>
         `;
       });
 
       if (!html) {
-        html = `<div class="text-center py-16 text-slate-400 bg-slate-900/50 rounded-2xl border border-slate-800">
-          没有匹配的节点，请点击上方“全部节点 (18)”重置筛选条件。
+        html = `<div class="text-center py-14 text-slate-400 bg-slate-900/50 rounded-2xl border border-slate-800">
+          当前筛选下无匹配节点，请点击【全部18节点】恢复。
         </div>`;
       }
 
@@ -867,97 +880,92 @@
       const noteVal = (appState.notes[node.id] || '').replace(/"/g, '&quot;');
       const escapedPrompt = node.prompt.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$');
 
-      const roleBadges = node.roles.map(r => {
+      const badges = node.roles.map(r => {
         const m = ROLE_META[r];
-        return `<span class="px-2 py-0.5 text-[11px] font-semibold rounded border ${m.badgeClass}">${m.label}</span>`;
+        return m ? `<span class="px-2 py-0.5 text-[11px] font-semibold rounded border ${m.badge}">${m.label}</span>` : '';
       }).join('');
 
       return `
-        <div class="node-card rounded-xl border border-slate-700/80 bg-slate-800/60 p-4 md:p-5 ${isDone ? 'node-done' : ''}">
-          <!-- 节点头部：打勾框 + 编号标题 + 角色徽章 -->
-          <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3.5 border-b border-slate-700/60">
-            <div class="flex items-start md:items-center gap-3">
+        <div class="node-card rounded-xl border border-slate-700/80 bg-slate-800/60 p-4 sm:p-5 ${isDone ? 'node-done' : ''}">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-2.5 pb-3 border-b border-slate-700/60">
+            <div class="flex items-start sm:items-center gap-3">
               <button
                 onclick="toggleNode('${node.id}')"
-                title="点击标记完成/未完成"
-                class="mt-0.5 md:mt-0 w-7 h-7 rounded-lg flex items-center justify-center border-2 transition ${
+                class="mt-0.5 sm:mt-0 w-7 h-7 rounded-lg flex items-center justify-center border-2 shrink-0 transition ${
                   isDone
                     ? 'bg-emerald-500 border-emerald-400 text-slate-950 font-black shadow-lg shadow-emerald-500/30'
                     : 'bg-slate-900 border-slate-500 hover:border-emerald-400 text-transparent'
                 }"
-              >
-                ✓
-              </button>
+              >✓</button>
               <div>
                 <div class="flex flex-wrap items-center gap-2">
                   <span class="px-2 py-0.5 text-xs font-mono font-bold rounded bg-slate-700 text-sky-300">节点 ${node.id}</span>
                   <span class="text-xs text-slate-400 font-mono">${node.days}</span>
-                  <h4 class="text-base font-bold ${isDone ? 'line-through text-emerald-300' : 'text-white'}">${node.title}</h4>
+                  <h4 class="text-sm sm:text-base font-extrabold ${isDone ? 'line-through text-emerald-300' : 'text-white'}">${node.title}</h4>
                   ${isDone ? `<span class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">✅ 已完成 (\${doneDate})</span>` : ''}
                 </div>
               </div>
             </div>
-
-            <div class="flex flex-wrap items-center gap-1.5">
-              ${roleBadges}
-            </div>
+            <div class="flex flex-wrap gap-1">${badges}</div>
           </div>
 
-          <!-- 节点主体：左栏【我本人做什么】 + 右栏【AI矩阵怎么干】 -->
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
-            <!-- 左栏：我本人 -->
+          <!-- 第一栏：👑 AI 大领导 (Gemini) 指令 -->
+          <div class="mt-3 bg-indigo-950/35 border border-indigo-500/40 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div class="text-xs leading-relaxed">
+              <span class="font-extrabold text-indigo-300">👑 AI 大领导 (Gemini) 统筹指令：</span>
+              <span class="text-slate-200">${node.leaderCmd}</span>
+            </div>
+            <button
+              onclick="copyText(\`\${escapedPrompt}\`, '节点 ${node.id} AI指令/提示词')"
+              class="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-bold shrink-0 self-start sm:self-center shadow transition"
+            >
+              📋 复制本节点 AI 提示词
+            </button>
+          </div>
+
+          <!-- 第二栏：左栏【我+6员工】 vs 右栏【线上Agent+第三方骑手】 -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-3.5 mt-3.5">
             <div class="bg-amber-950/20 border border-amber-500/30 rounded-xl p-3.5">
               <div class="text-xs font-extrabold text-amber-300 mb-2 flex items-center justify-between">
-                <span>👤 我本人做什么（物理动作 / 商业拍板）</span>
-                <span class="text-[11px] text-amber-400/80">必须亲自把关</span>
+                <span>👥 我本人 + 门店 6 员工动作（店员只拣货打包，绝不出门送货）</span>
               </div>
-              <ol class="space-y-2 text-xs text-slate-200 list-decimal list-inside leading-relaxed">
-                ${node.myActions.map(act => `<li>\${act}</li>`).join('')}
-              </ol>
+              <ul class="space-y-2 text-xs text-slate-200 leading-relaxed">
+                ${node.physicalActions.map(act => `<li class="bg-slate-900/60 p-2 rounded-lg border border-slate-700/50">\${act}</li>`).join('')}
+              </ul>
             </div>
 
-            <!-- 右栏：AI 矩阵 -->
             <div class="bg-sky-950/20 border border-sky-500/30 rounded-xl p-3.5 flex flex-col justify-between">
               <div>
                 <div class="text-xs font-extrabold text-sky-300 mb-2 flex items-center justify-between">
-                  <span>🤖 AI 矩阵怎么安排（工具分工与自动执行）</span>
-                  <button
-                    onclick="copyText(\`\${escapedPrompt}\`, '节点 ${node.id} 专属 AI 提示词')"
-                    class="px-2.5 py-1 rounded bg-sky-600 hover:bg-sky-500 text-white text-[11px] font-bold transition shadow"
-                  >
-                    📋 一键复制该节点 AI 提示词
-                  </button>
+                  <span>🤖 线上 Agent 矩阵（Cursor / 爬虫 / Grokbot / 骑手API）</span>
                 </div>
                 <div class="space-y-2 text-xs leading-relaxed">
-                  ${node.aiActions.map(ai => {
-                    const m = ROLE_META[ai.role];
-                    return `<div class="flex items-start gap-2 bg-slate-900/60 p-2 rounded-lg border border-slate-700/60">
-                      <span class="shrink-0 px-1.5 py-0.5 text-[11px] font-bold rounded border ${m.badgeClass}">${m.label}</span>
+                  ${node.onlineActions.map(ai => {
+                    const m = ROLE_META[ai.role] || { label: ai.role, badge: 'bg-slate-700 text-white' };
+                    return `<div class="flex items-start gap-2 bg-slate-900/60 p-2.5 rounded-lg border border-slate-700/60">
+                      <span class="shrink-0 px-1.5 py-0.5 text-[11px] font-bold rounded border ${m.badge}">${m.label}</span>
                       <span class="text-slate-200">\${ai.task}</span>
                     </div>`;
                   }).join('')}
                 </div>
               </div>
-
-              <!-- 提示词预览折叠框 -->
               <div class="mt-2.5 pt-2 border-t border-slate-700/60 text-[11px] text-slate-400 font-mono truncate" title="${node.prompt.replace(/"/g, '&quot;')}">
                 💡 提示词预览：${node.prompt}
               </div>
             </div>
           </div>
 
-          <!-- 节点底部：交付验收标准 + 实时备注输入框 -->
-          <div class="mt-3.5 pt-3 border-t border-slate-700/50 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
+          <div class="mt-3.5 pt-3 border-t border-slate-700/50 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs">
             <div class="text-emerald-300 font-medium">
               🎯 <b>验收标准：</b><span class="text-slate-200">${node.deliverable}</span>
             </div>
-            <div class="flex items-center gap-2 w-full md:w-80">
+            <div class="flex items-center gap-2 w-full sm:w-80">
               <span class="text-slate-400 shrink-0">📝 备注:</span>
               <input
                 type="text"
                 value="${noteVal}"
                 oninput="updateNote('${node.id}', this.value)"
-                placeholder="记录本节点实操情况/选品/踩坑..."
+                placeholder="记录远程开发/门店实操进展..."
                 class="w-full bg-slate-900/90 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-slate-200 focus:outline-none focus:border-emerald-400"
               />
             </div>
@@ -966,9 +974,989 @@
       `;
     }
 
-    // 初始化启动
     loadState();
-    updateStatsBar();
+    updateProgressBar();
+    renderRoadmap();
+  </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>爱尚佳千平超市 V4.0 · 远程先行 + 全品类小程序 + 美团洗客 + 第三方骑手全链路看板</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Microsoft YaHei", "PingFang SC", sans-serif;
+      background-color: #0b1120;
+      color: #f8fafc;
+    }
+    .node-card { transition: all 0.2s ease; }
+    .node-card:hover { transform: translateY(-2px); }
+    .node-done {
+      border-color: rgba(16, 185, 129, 0.55) !important;
+      background: linear-gradient(135deg, rgba(6, 78, 59, 0.35), rgba(15, 23, 42, 0.95)) !important;
+    }
+    .org-card { transition: all 0.18s ease; cursor: pointer; }
+    .org-card:hover { transform: scale(1.02); box-shadow: 0 0 18px rgba(56, 189, 248, 0.25); }
+    .pulse-dot { animation: pulse 2s infinite; }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+  </style>
+</head>
+<body class="min-h-screen pb-24">
+
+  <!-- 顶部 Sticky 导航与进度栏 -->
+  <header class="sticky top-0 z-50 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 shadow-2xl">
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 py-3">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2.5">
+        <div>
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="px-2.5 py-0.5 text-xs font-extrabold rounded-full bg-rose-500/20 text-rose-300 border border-rose-400/40">
+              🔥 V4.0 实战定稿版 (远程先行 + 全品类 + 第三方骑手)
+            </span>
+            <h1 class="text-base sm:text-xl font-extrabold tracking-tight text-white">
+              🏪 爱尚佳千平超市 · AI大领导总领 × 全品类0扣点小程序 × 公域洗客看板
+            </h1>
+          </div>
+          <p class="text-[11px] sm:text-xs text-slate-400 mt-1">
+            公网看板：<a href="https://a841478369-code.github.io/ai-shangjia/" class="text-sky-400 underline">https://a841478369-code.github.io/ai-shangjia/</a> ｜ 云端台账：NotebookLM【超市生存法则】
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-1.5">
+          <button onclick="copyCloudSyncCommand()" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white shadow transition">
+            ☁️ 复制同步口令 (汇报给AI大领导)
+          </button>
+          <button onclick="exportProgressJSON()" class="px-2.5 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+            💾 导出进度
+          </button>
+          <label class="px-2.5 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 cursor-pointer transition">
+            📂 导入进度
+            <input type="file" accept=".json" class="hidden" onchange="importProgressJSON(event)" />
+          </label>
+          <button onclick="resetAllProgress()" class="px-2 py-1.5 text-xs rounded-lg bg-rose-950/60 hover:bg-rose-900/80 text-rose-300 border border-rose-800/50 transition">
+            重置
+          </button>
+        </div>
+      </div>
+
+      <!-- 进度条 -->
+      <div class="mt-2.5 pt-2 border-t border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div class="flex-1">
+          <div class="flex justify-between text-xs mb-1">
+            <span class="font-bold text-emerald-400" id="progressText">已完成 1 / 18 个核心节点 (6%)</span>
+            <span class="text-slate-400 text-[11px]" id="lastSavedText">当前处于【第一部分：接手前·远程先行期】</span>
+          </div>
+          <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+            <div id="progressBar" class="h-full bg-gradient-to-r from-indigo-500 via-emerald-400 to-sky-400 transition-all duration-300" style="width: 6%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-3 sm:px-4 mt-4 space-y-5">
+
+    <!-- 模块零：AI大领导 (Gemini API) 数据管道与第三方运力实时状态监控灯 -->
+    <section class="bg-slate-900/95 border border-slate-800 rounded-2xl p-3.5 shadow-lg">
+      <div class="text-xs font-extrabold text-slate-300 mb-2.5 flex items-center justify-between">
+        <span>📡 AI 大领导 (Gemini API) 四大数据源与第三方运力监控回执面板</span>
+        <span class="text-[11px] text-sky-400 font-normal">解决“怎么知道Gemini收到了数据”——本地脚本读取后实时点亮回执</span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 text-xs">
+        <div class="bg-slate-800/80 border border-emerald-500/30 rounded-xl p-2.5 flex items-start gap-2.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 pulse-dot mt-1 shrink-0"></span>
+          <div>
+            <div class="font-bold text-white">🕷️ 3000+全品类爬虫库</div>
+            <div class="text-[11px] text-emerald-300 mt-0.5">远程先行就绪：待抓美团/饿了么/多多全品库</div>
+          </div>
+        </div>
+        <div class="bg-slate-800/80 border border-sky-500/30 rounded-xl p-2.5 flex items-start gap-2.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-sky-400 pulse-dot mt-1 shrink-0"></span>
+          <div>
+            <div class="font-bold text-white">🛵 第三方聚合骑手 API</div>
+            <div class="text-[11px] text-sky-300 mt-0.5">顺丰同城/达达/蜂鸟/闪送 (远程联调中)</div>
+          </div>
+        </div>
+        <div class="bg-slate-800/80 border border-amber-500/30 rounded-xl p-2.5 flex items-start gap-2.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-amber-400 mt-1 shrink-0"></span>
+          <div>
+            <div class="font-bold text-white">🏪 思迅天店 3000+ 收银流水</div>
+            <div class="text-[11px] text-amber-300 mt-0.5">待正式接手门店后导出 Excel 接入</div>
+          </div>
+        </div>
+        <div class="bg-slate-800/80 border border-purple-500/30 rounded-xl p-2.5 flex items-start gap-2.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-purple-400 mt-1 shrink-0"></span>
+          <div>
+            <div class="font-bold text-white">🎬 员工3-4号 视频与尾货群</div>
+            <div class="text-[11px] text-purple-300 mt-0.5">待接手门店后开启微信群自动签收</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 模块一：V4.0 顶层人机与第三方运力指挥架构图 -->
+    <section class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-sm sm:text-base md:text-lg font-extrabold text-white">
+          🏛️ 一、 V4.0 顶层架构：AI大领导总领 × 全品类0扣点小程序 × 美团饿了么洗客 × 第三方骑手
+        </h2>
+        <button onclick="toggleSection('orgBody', 'orgBtn')" id="orgBtn" class="text-xs text-sky-400 hover:underline shrink-0">收起 ▲</button>
+      </div>
+
+      <div id="orgBody" class="space-y-4">
+        <!-- 顶层：AI大领导 -->
+        <div class="flex justify-center">
+          <div onclick="setRoleFilter('leader')" class="org-card w-full lg:w-4/5 bg-gradient-to-r from-indigo-600/30 via-purple-600/25 to-sky-600/30 border-2 border-indigo-400/70 rounded-2xl p-3.5 text-center shadow-lg">
+            <div class="inline-block px-3 py-0.5 rounded-full text-[11px] font-black bg-indigo-500 text-white mb-1">
+              TOP 1 · 全局总指挥 (Gemini 4.0 API + 云端账本)
+            </div>
+            <div class="text-sm sm:text-base font-black text-indigo-200">
+              👑 AI 大领导：前期指挥 Cursor 远程造好“全品类小程序+爬虫+骑手接口”，接手后统筹“全品双轨定价+6员工排班+每晚扭亏复盘”
+            </div>
+            <p class="text-xs text-slate-300 mt-1">
+              核心战略：用 <b>美团/饿了么/抖音（高价防亏）</b> 白嫖周边3公里公域流量 ➔ 靠 <b>包裹洗客卡+收银截流</b> 全部洗进 <b>自有3000+全品类小程序（0扣点、便宜15%）</b> ➔ 由 <b>顺丰/达达/蜂鸟第三方骑手</b> 送货上门！
+            </p>
+          </div>
+        </div>
+
+        <!-- 三大支柱并列：线上Agent矩阵 + 线下1+6物理战队 + 外部公域与第三方骑手 -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-3.5">
+
+          <!-- 支柱1：线上AI Agent矩阵（远程先行主力） -->
+          <div class="bg-sky-950/20 border-2 border-sky-500/40 rounded-2xl p-3.5 space-y-2.5">
+            <div class="flex items-center justify-between border-b border-sky-500/30 pb-1.5">
+              <span class="text-xs sm:text-sm font-extrabold text-sky-300">🤖 1. 线上 AI Agent 矩阵 (远程先干)</span>
+              <span class="text-[10px] px-2 py-0.5 rounded bg-sky-500/20 text-sky-200 font-bold">Day 1-20 主力</span>
+            </div>
+            <div onclick="setRoleFilter('cursor')" class="org-card bg-slate-800/85 border border-blue-500/40 rounded-xl p-2.5 text-xs">
+              <div class="font-bold text-blue-300">💻 Cursor (调用Claude写代码)</div>
+              <p class="text-[11px] text-slate-300 mt-0.5">写3000+全品类小程序(左分类右列表+搜索)、FastAPI后端、顺丰/达达/蜂鸟聚合呼叫骑手接口、PC抓包脚本。</p>
+            </div>
+            <div onclick="setRoleFilter('agent')" class="org-card bg-slate-800/85 border border-emerald-500/40 rounded-xl p-2.5 text-xs">
+              <div class="font-bold text-emerald-300">🕷️ 爬虫 & 自动化 Agent</div>
+              <p class="text-[11px] text-slate-300 mt-0.5">远程爬美团闪购/饿了么/多多3000+全品类商品图库与规格；企微定时推群；本地4080显卡24h虚拟人直播。</p>
+            </div>
+            <div onclick="setRoleFilter('grokbot')" class="org-card bg-slate-800/85 border border-purple-500/40 rounded-xl p-2.5 text-xs">
+              <div class="font-bold text-purple-300">🦅 Grokbot (销冠文案大脑)</div>
+              <p class="text-[11px] text-slate-300 mt-0.5">写《美团包裹比价洗客卡》、每日早中晚3波业主群推文、晚8点尾货日清秒杀文案、100段直播口播稿。</p>
+            </div>
+          </div>
+
+          <!-- 支柱2：线下1主理人+6员工（只管店内，绝不出店跑腿！） -->
+          <div class="bg-amber-950/20 border-2 border-amber-500/40 rounded-2xl p-3.5 space-y-2.5">
+            <div class="flex items-center justify-between border-b border-amber-500/30 pb-1.5">
+              <span class="text-xs sm:text-sm font-extrabold text-amber-300">👥 2. 我 + 6名门店员工 (只管店内！)</span>
+              <span class="text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-200 font-bold">Day 21起进店</span>
+            </div>
+            <div onclick="setRoleFilter('me')" class="org-card bg-slate-800/85 border border-amber-400/50 rounded-xl p-2.5 text-xs">
+              <div class="font-bold text-amber-300">👤 我本人 (总经理 / 拍板人)</div>
+              <p class="text-[11px] text-slate-300 mt-0.5">接手前在家督导Cursor远程开发；接手后砍掉盲目周三88折、导出思迅3000+商品表、看每晚22点AI日报发奖金。</p>
+            </div>
+            <div onclick="setRoleFilter('staff_cashier')" class="org-card bg-slate-800/85 border border-orange-400/40 rounded-xl p-2.5 text-xs">
+              <div class="font-bold text-orange-300">👩‍💼 员工 1-2 号：收银与截流岗 (2人)</div>
+              <p class="text-[11px] text-slate-300 mt-0.5">思迅扫码结账、把每天400进店客流洗进小程序群(立减2元)；<b>简单AI</b>：手机输6位码1秒核销自提单。</p>
+            </div>
+            <div onclick="setRoleFilter('staff_fresh')" class="org-card bg-slate-800/85 border border-lime-400/40 rounded-xl p-2.5 text-xs">
+              <div class="font-bold text-lime-300">👨‍🔧 员工 3-4 号：生鲜理货与素材岗 (2人)</div>
+              <p class="text-[11px] text-slate-300 mt-0.5">生鲜挑拣陈列、挂小程序便宜15%爆炸贴；<b>简单AI</b>：早拍15秒到货视频发群、晚8点拍剩菜发语音触发AI日清。</p>
+            </div>
+            <div onclick="setRoleFilter('staff_picker')" class="org-card bg-slate-800/85 border border-cyan-400/40 rounded-xl p-2.5 text-xs">
+              <div class="font-bold text-cyan-300">📦 员工 5-6 号：店内拣货打包岗 (绝不送货)</div>
+              <p class="text-[11px] text-slate-300 mt-0.5">按AI排好的货架路线极速拣货装袋、<b>100%塞洗客卡</b>、放门口取货台；<b>简单AI</b>：手机点【打包完成·呼叫骑手】。</p>
+            </div>
+          </div>
+
+          <!-- 支柱3：公域流量漏斗与第三方骑手运力池 -->
+          <div class="bg-emerald-950/20 border-2 border-emerald-500/40 rounded-2xl p-3.5 space-y-2.5 flex flex-col justify-between">
+            <div class="space-y-2.5">
+              <div class="flex items-center justify-between border-b border-emerald-500/30 pb-1.5">
+                <span class="text-xs sm:text-sm font-extrabold text-emerald-300">🛵 3. 公域白嫖漏斗 & 第三方骑手池</span>
+                <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-200 font-bold">外部杠杆</span>
+              </div>
+              <div class="bg-slate-800/85 border border-rose-500/40 rounded-xl p-2.5 text-xs">
+                <div class="font-bold text-rose-300">📢 美团闪购 / 饿了么 / 抖音团购 (公域漏斗)</div>
+                <p class="text-[11px] text-slate-300 mt-1 leading-relaxed">
+                  · <b>定位</b>：平台扣点15%~25%太黑，绝不做主力利润来源，只用来<b>白嫖周边3公里公域搜索新客</b>！<br>
+                  · <b>洗客手段</b>：外卖定高价防亏 + 每单包裹必钉一张《扫小程序买全店3000种商品直降15%》洗客卡，买一次就洗进自己小程序！
+                </p>
+              </div>
+              <div class="bg-slate-800/85 border border-teal-500/40 rounded-xl p-2.5 text-xs">
+                <div class="font-bold text-teal-300">🛵 顺丰同城 / 达达 / 蜂鸟 / 闪送 (聚合运力)</div>
+                <p class="text-[11px] text-slate-300 mt-1 leading-relaxed">
+                  · <b>定位</b>：门店6名员工绝不出门送货！所有外卖与小程序满额配送100%交由第三方骑手承接。<br>
+                  · <b>运作</b>：员工5-6号打包放上门口【闪电取货台】点呼叫 ➔ 系统自动比价派给最便宜骑手(约4.5~5.5元/单，远低于美团20%扣点)！
+                </p>
+              </div>
+            </div>
+            <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-2 text-[11px] text-slate-400 text-center">
+              💡 <b>利润公式</b>：省下美团 20% 扣点 = 足够补贴第三方骑手运费 + 给邻居让利 10% + 门店净赚 22% 毛利！
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 模块二：视角切换与搜索过滤栏 -->
+    <section class="bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 shadow-lg">
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+        <div class="flex flex-wrap gap-1.5" id="roleFilterBtns">
+          <button onclick="setRoleFilter('all')" data-role="all" class="role-btn px-3 py-1.5 rounded-lg text-xs font-extrabold bg-sky-600 text-white ring-2 ring-sky-400">全部18节点</button>
+          <button onclick="setPhaseFilter('remote')" data-role="phase_remote" class="role-btn px-2.5 py-1.5 rounded-lg text-xs font-extrabold bg-rose-950/80 text-rose-300 border border-rose-500/40 hover:bg-rose-900">🔥 只看：接手前·远程先行(1~9)</button>
+          <button onclick="setPhaseFilter('store')" data-role="phase_store" class="role-btn px-2.5 py-1.5 rounded-lg text-xs font-extrabold bg-emerald-950/80 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-900">🏪 只看：接手后·门店落地(10~18)</button>
+          <button onclick="setRoleFilter('leader')" data-role="leader" class="role-btn px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-indigo-300 hover:bg-slate-700">👑 AI大领导</button>
+          <button onclick="setRoleFilter('me')" data-role="me" class="role-btn px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-amber-300 hover:bg-slate-700">👤 我本人</button>
+          <button onclick="setRoleFilter('cursor')" data-role="cursor" class="role-btn px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-blue-300 hover:bg-slate-700">💻 Cursor</button>
+          <button onclick="setRoleFilter('staff_cashier')" data-role="staff_cashier" class="role-btn px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-orange-300 hover:bg-slate-700">👩‍💼 收银1-2</button>
+          <button onclick="setRoleFilter('staff_fresh')" data-role="staff_fresh" class="role-btn px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-lime-300 hover:bg-slate-700">👨‍🔧 理货3-4</button>
+          <button onclick="setRoleFilter('staff_picker')" data-role="staff_picker" class="role-btn px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-cyan-300 hover:bg-slate-700">📦 打包呼骑手5-6</button>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <select id="statusFilter" onchange="renderRoadmap()" class="bg-slate-800 border border-slate-700 text-xs text-slate-200 rounded-lg px-2.5 py-1.5">
+            <option value="all">全部状态</option>
+            <option value="todo">⏳ 未完成</option>
+            <option value="done">✅ 已完成</option>
+          </select>
+          <input
+            type="text"
+            id="searchInput"
+            oninput="renderRoadmap()"
+            placeholder="搜全品类/骑手/美团/节点..."
+            class="bg-slate-800 border border-slate-700 text-xs text-slate-200 rounded-lg px-3 py-1.5 w-full sm:w-44 focus:outline-none focus:border-sky-500"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- 模块三：六大阶段 · 18个核心节点容器 -->
+    <div id="roadmapContainer" class="space-y-8"></div>
+
+  </main>
+
+  <div id="toast" class="fixed bottom-5 right-5 z-50 hidden px-4 py-2.5 rounded-xl bg-emerald-600 text-white text-xs font-bold shadow-2xl border border-emerald-400/50"></div>
+
+  <script>
+    const STORAGE_KEY = 'aishangjia_v4_fullcatalog_roadmap';
+
+    const ROLE_META = {
+      leader:        { label: '👑 AI大领导(Gemini)',     badge: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40' },
+      me:            { label: '👤 我本人(总经理)',       badge: 'bg-amber-500/20 text-amber-300 border-amber-500/40' },
+      staff_cashier: { label: '👩‍💼 员工1-2(收银截流)',   badge: 'bg-orange-500/20 text-orange-300 border-orange-500/40' },
+      staff_fresh:   { label: '👨‍🔧 员工3-4(理货拍素材)', badge: 'bg-lime-500/20 text-lime-300 border-lime-500/40' },
+      staff_picker:  { label: '📦 员工5-6(打包呼骑手)', badge: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40' },
+      cursor:        { label: '💻 Cursor研发',           badge: 'bg-blue-500/20 text-blue-300 border-blue-500/40' },
+      grokbot:       { label: '🦅 Grokbot文案',          badge: 'bg-purple-500/20 text-purple-300 border-purple-500/40' },
+      agent:         { label: '⚙️ 爬虫/自动化Agent',     badge: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' },
+      github:        { label: '🐙 GitHub管家',           badge: 'bg-slate-600/30 text-slate-200 border-slate-500/40' }
+    };
+
+    const STAGES_DATA = [
+      // ==================== 第一部分：接手前·远程先行期 ====================
+      {
+        stageId: 'S1',
+        phase: 'remote',
+        phaseBadge: '🔥 接手前·远程先行 (无需进店)',
+        stageTitle: '阶段一（远程先干）：GitHub 基建与爬取“3000+全品类”商品图库/双轨定价',
+        stagePeriod: 'Day 1 - Day 6',
+        stageDesc: '还没接手门店也不耽误！在家用电脑抓包周边美团闪购/饿了么/多多买菜，先把 3000+ 全品类商品高清图、条码与双轨价格体系建好。',
+        nodes: [
+          {
+            id: '1.1',
+            title: 'GitHub 仓库初始化与手机端公网看板上线',
+            days: 'Day 1 (已完成)',
+            roles: ['leader', 'me', 'github'],
+            leaderCmd: '统筹云端 NotebookLM【超市生存法则】总台账与 GitHub 代码库版本控制。',
+            physicalActions: [
+              '【👤 我本人（远程）】：创建 GitHub 仓库 ai-shangjia，上传 index.html 开启 Pages 公网访问，手机随时查看推进。'
+            ],
+            onlineActions: [
+              { role: 'github', task: '全天候托管 https://a841478369-code.github.io/ai-shangjia/ 公网看板与后续前后端代码。' }
+            ],
+            prompt: '【已完成节点】：仓库与手机端公网看板已上线。',
+            deliverable: '手机/电脑公网看板正常访问，云端台账实时联动'
+          },
+          {
+            id: '1.2',
+            title: '远程抓包美团闪购/饿了么/多多买菜“3000+全品类商品库与多规格数据”',
+            days: 'Day 2 - Day 4',
+            roles: ['leader', 'me', 'cursor', 'agent'],
+            leaderCmd: '制定千平超市 12 大全品类标准分类树（果蔬/肉蛋/熟食烘焙/水饮酒乳/休食速食/粮油调味/日百个护/家清母婴），下达全量抓包指令。',
+            physicalActions: [
+              '【👤 我本人（远程在家）】：在电脑上登录 PC 微信与美团外卖/饿了么，定位到目标超市周边 3 公里的大型商超（如物美/华联/大型生鲜超市）及多多买菜，花 20 分钟把 12 个分类从上往下滑一遍。'
+            ],
+            onlineActions: [
+              { role: 'cursor', task: '编写 Mitmproxy 抓包解析脚本 sniff_full_catalog.py，自动拦截滑过的所有商品名称、69标准条码、12大分类归属、原价、促销价、高清无水印大图及多规格选项（单瓶 vs 整箱）。' },
+              { role: 'agent',  task: '自动批量下载 3000+ 张商品高清图并按分类与条码归档，免去进店后人工一个个拍照的苦力活。' }
+            ],
+            prompt: '【发给 Cursor (Ask模式)】：请编写基于 Python mitmproxy 的全品类抓包脚本 sniff_full_catalog.py，用于监听 PC 微信美团外卖商超/多多买菜接口，自动提取商品名称、分类名、规格数组(specs)、现价、原价及高清图片 URL，自动去重后存入 full_catalog_3000.sqlite 数据库中。',
+            deliverable: '在家零成本建好 3000+ 款带高清图、分类、多规格的超市全品类初始底座'
+          },
+          {
+            id: '1.3',
+            title: '编写“美团饿了么高扣点防亏价 vs 自有小程序0扣点低价”双轨定价清洗脚本',
+            days: 'Day 5 - Day 6',
+            roles: ['leader', 'me', 'cursor'],
+            leaderCmd: '针对美团/饿了么 15%~25% 的暴利扣点，设计双轨价格公式：外卖平台售价 = 门店基准价 × 1.15（配合高满减防亏）；自有小程序售价 = 门店基准价 × 0.90~0.95（全品真便宜 10%~15%），制造强烈价差把用户逼向小程序！',
+            physicalActions: [
+              '【👤 我本人（远程在家）】：审阅 AI 大领导制定的 12 大品类目标毛利率底线（全店综合毛利锁定 ≥20%）。'
+            ],
+            onlineActions: [
+              { role: 'cursor', task: '编写 build_omni_pricing.py 脚本，将来只需导入思迅天店 Excel，10 秒钟自动生成三套表格：①《自有小程序全品特惠导入表》、②《美团闪购批量上架表》、③《饿了么批量上架表》。' }
+            ],
+            prompt: '【发给 Cursor (Ask模式)】：请编写 Python 脚本 build_omni_pricing.py，读取商品成本与门店基准价，自动生成两套线上价格：1.小程序0扣点会员价（保底毛利18%，生鲜爆品直降12%）；2.美团饿了么外卖价（自动计入18%平台扣点与包装费，反推不亏本的划线满减价），并分别导出为美团、饿了么和自研小程序的标准导入格式。',
+            deliverable: '双轨定价转换器就绪，确保美团饿了么绝不亏本、自有小程序具备绝对价格碾压优势'
+          }
+        ]
+      },
+      {
+        stageId: 'S2',
+        phase: 'remote',
+        phaseBadge: '🔥 接手前·远程先行 (无需进店)',
+        stageTitle: '阶段二（远程先干）：Cursor 研发“3000+全品类小程序”与“第三方聚合骑手接口”',
+        stagePeriod: 'Day 7 - Day 14',
+        stageDesc: '在家用 Cursor 把主推的全品类小程序、防超卖库存锁、以及对接顺丰同城/达达/蜂鸟的第三方自动呼骑手接口全部开发完毕。',
+        nodes: [
+          {
+            id: '2.1',
+            title: '全品类小程序前端研发（首页单列爆品 + 分类页左导航右全品 + 极速搜索 + 多规格）',
+            days: 'Day 7 - Day 10',
+            roles: ['leader', 'me', 'cursor'],
+            leaderCmd: '升级小程序架构：不再局限于 50 款爆品！首页用“单列大卡片”强推 30 款引流生鲜爆品；分类页采用“左侧 12 大分类电梯导航 + 右侧 3000+ 全品类虚拟列表（防卡顿）+ 顶部拼音/条码搜索框 + 单件/整箱多规格弹窗”。',
+            physicalActions: [
+              '【👤 我本人（远程在家）】：在电脑微信开发者工具上扫码预览，测试滑动浏览 3000 个商品的流畅度、搜索“酱油/纸巾/可乐”的秒出效果，以及底部“还差X元免骑手配送费”的凑单提示条。'
+            ],
+            onlineActions: [
+              { role: 'cursor', task: '调用 Claude 模型在 Ask/Plan 模式下编写首页(pages/index)、全品类分类页(pages/category)、搜索页(pages/search)及购物车凑单组件。' }
+            ],
+            prompt: '【发给 Cursor (Ask模式)】：请为“爱尚佳生活超市”编写原生微信小程序的【全品类分类页 pages/category】：1.顶部为固定搜索框（支持搜商品名或拼音首字母）及“比美团/饿了么省15%”提示条；2.主体为左右分栏：左侧宽度180rpx展示12大超市分类竖向滚动并高亮当前项，右侧展示该分类下的商品列表（支持虚拟分页加载3000+SKU不卡顿、多规格选择弹窗如“单瓶/整箱”、红色会员价与绿色加号按钮）；3.底部为悬浮购物车条，动态显示“再买X元即可免第三方骑手配送费”。',
+            deliverable: '全品类小程序前端 4 大页面在本地微信开发者工具完美跑通'
+          },
+          {
+            id: '2.2',
+            title: 'FastAPI 后端 + 3000+全品类数据库 + “防超卖安全库存锁”与缺货替换接口',
+            days: 'Day 11 - Day 12',
+            roles: ['leader', 'me', 'cursor'],
+            leaderCmd: '解决全品类 3000+ 商品线上线下库存不同步死穴：设定“安全库存缓冲锁”（思迅天店库存 ≤2 件时小程序自动停售，留给线下散客拿），并开发店员拣货发现缺货时“一键退差价/换同款”功能。',
+            physicalActions: [
+              '【👤 我本人（远程在家）】：在本地电脑启动 FastAPI 服务，测试批量导入 3000 款商品 JSON 及并发下单扣库存接口。'
+            ],
+            onlineActions: [
+              { role: 'cursor', task: '编写 FastAPI 后端模型（categories分类表, products全品表, product_skus多规格表, orders订单表, delivery_orders骑手运单表）及思迅 Excel 增量同步接口。' }
+            ],
+            prompt: '【发给 Cursor (Ask模式)】：请基于 FastAPI + SQLAlchemy 编写支持 3000+ 全品类超市的后端商品与库存模型，包含：1.接收思迅天店导出的库存 Excel 自动更新线上可售库存（自动扣除 safety_stock=2 的安全缓冲库存防超卖）；2.当拣货员在门店发现某件小百货实际缺货时，支持调用 POST /api/staff/partial-refund 一键原路退还该单品差价而无需整单取消。',
+            deliverable: '支持 3000+ 全品类的后端数据库与防超卖/部分退差价机制跑通'
+          },
+          {
+            id: '2.3',
+            title: '对接第三方聚合配送 API（顺丰同城/达达/蜂鸟/闪送/微信同城配送）',
+            days: 'Day 13 - Day 14',
+            roles: ['leader', 'me', 'cursor'],
+            leaderCmd: '确立铁律：门店 6 名员工绝不出门送货！所有外卖与小程序满额配全部呼叫第三方骑手。后端对接聚合运力 API，实现“多平台骑手自动比价派单 + 恶劣天气自动加小费 + 顾客端实时看骑手轨迹”。',
+            physicalActions: [
+              '【👤 我本人（远程在家）】：在微信小程序后台开通官方【同城配送】插件（已内置顺丰同城/达达/闪送/美团跑腿接口，免单独开发多家签名）或注册【麦芽田/达达开放平台】获取测试 Key。'
+            ],
+            onlineActions: [
+              { role: 'cursor', task: '编写 /api/delivery/dispatch 自动呼叫骑手接口与骑手状态回调 Webhook（已接单 ➔ 骑手到店 ➔ 配送中 ➔ 已送达），并在员工手机端 /staff 加上【打包完成·呼叫骑手】大按钮。' }
+            ],
+            prompt: '【发给 Cursor (Ask模式)】：请帮我在 FastAPI 后端编写对接【微信小程序同城配送 API / 达达快送 API】的模块 delivery.py：1.顾客下单选择“送货上门”时，先调用预询价接口计算距离运费（满39元门店补贴3元运费，满69元免运费）；2.门店拣货员在手机端点击【打包完成·呼叫骑手】后，自动向顺丰同城/达达/蜂鸟发起正式派单，并返回生成的 #取货号（如 #08号袋）供小票机打印。',
+            deliverable: '沙盒测试跑通：点一下按钮即可自动向顺丰/达达/蜂鸟比价呼叫骑手并生成取货码'
+          }
+        ]
+      },
+      {
+        stageId: 'S3',
+        phase: 'remote',
+        phaseBadge: '🔥 接手前·远程先行 (无需进店)',
+        stageTitle: '阶段三（远程先干）：Gemini API 专线打通与“美团/饿了么白嫖洗客包”定稿',
+        stagePeriod: 'Day 15 - Day 20',
+        stageDesc: '在家把本地电脑到 Gemini API 的自动化汇报专线接通，并把美团/饿了么包裹洗客卡、4080 虚拟直播间全部预装好。',
+        nodes: [
+          {
+            id: '3.1',
+            title: '打通本地电脑 Gemini API 专线 + 企微机器人秒级回执',
+            days: 'Day 15 - Day 16',
+            roles: ['leader', 'me', 'cursor', 'agent'],
+            leaderCmd: '解决“怎么知道我收到了数据”：本地脚本只要检测到文件夹有新表格或新视频，3秒内上传 Gemini API 分析，10秒内在企微群弹出【✅ AI大领导已读取数据回执】。',
+            physicalActions: [
+              '【👤 我本人（远程在家）】：获取 Gemini API Key 填入本地配置文件，往电脑 `D:\\爱尚佳数据中心` 丢一个测试 Excel 表，亲眼验证手机微信收到 AI 大领导的分析回执。'
+            ],
+            onlineActions: [
+              { role: 'cursor', task: '编写本地后台守护脚本 ai_leader_daemon.py（使用 watchdog 监听文件夹变化 + 调用 google-genai SDK + 推送企微 Webhook）。' }
+            ],
+            prompt: '【发给 Cursor (Ask模式)】：请写一个 Python 后台监听脚本 ai_leader_daemon.py：使用 watchdog 监控本地 D:\\爱尚佳数据中心 目录（含 1_思迅收银表、2_员工拍视频、3_竞对爬虫表）。一旦放入新文件，立即调用 Gemini API 进行分析，并将“已成功读取文件名+核心数据摘要+今日调价/剪辑指令”通过企业微信群机器人 Webhook 发送到我手机上。',
+            deliverable: '往电脑文件夹丢任何表格/视频，手机微信 10 秒内必收到 AI 大领导签收分析回执'
+          },
+          {
+            id: '3.2',
+            title: '美团闪购/饿了么/抖音“白嫖公域洗客入小程序”全套方案与比价卡印制',
+            days: 'Day 17 - Day 18',
+            roles: ['leader', 'me', 'grokbot'],
+            leaderCmd: '设计高转化洗客漏斗：在美团/饿了么挂 10 款极致引流品（如 0.99 元葱姜、9.9 元鸡蛋）骗取平台公域排名，再用包裹里的《比价洗客卡》把顾客彻底洗进自有全品类小程序。',
+            physicalActions: [
+              '【👤 我本人（远程在家）】：找淘宝或本地印刷厂，花几十块钱提前印好 3000 张《美团/饿了么包裹比价洗客卡》和 4 个收银台/货架爆炸贴立牌。'
+            ],
+            onlineActions: [
+              { role: 'grokbot', task: '撰写极具冲击力的洗客卡正反面文案（正面直接列出 5 款常用商品“美团价 vs 本店小程序价”对比表，反面放小程序太阳码+企微群二维码）。' }
+            ],
+            prompt: '【发给 Grokbot】：我们要把美团外卖和饿了么当成免费广告牌，把点外卖的邻居全部洗到我们自己的0扣点全品类小程序里。请帮我设计一张夹在每个外卖袋里的《邻居省钱比价卡》文案：用最直观的数字告诉顾客“因为美团抽成20%，同样一箱水/一盒肉在美团买贵10块钱！直接微信扫本卡用【爱尚佳官方小程序】，全店3000种商品便宜15%，同样是顺丰/达达骑手半小时送到您家，今天扫码再白送5元无门槛券！”',
+            deliverable: '3000 张外卖包裹洗客卡与店内比价立牌印制到手，随时准备进店铺设'
+          },
+          {
+            id: '3.3',
+            title: '在家用 RTX 4080 电脑预装 24h 虚拟主播与 FFmpeg 视频自动混剪流水线',
+            days: 'Day 19 - Day 20',
+            roles: ['leader', 'me', 'cursor', 'grokbot', 'agent'],
+            leaderCmd: '在进店前把 4080 主机的直播推流与短视频自动混剪脚本全部调通，进店后只需插网线换背景图即可 24h 开播。',
+            physicalActions: [
+              '【👤 我本人（远程在家）】：在自己的 RTX 4080 电脑上运行测试 auto_clip.py 混剪脚本与数字人直播软件。'
+            ],
+            onlineActions: [
+              { role: 'grokbot', task: '生成全品类超市省钱口播稿 100 段（强调“抖音领券到店或微信搜爱尚佳小程序全店3000种商品骑手送到家”）。' },
+              { role: 'cursor',  task: '调通 FFmpeg 自动拼接视频、加 AI 配音、加黄底黑字同城大标题脚本。' }
+            ],
+            prompt: '【发给 Grokbot】：请写30段针对周边3公里居民的抖音本地生活直播间口播稿，既推9.9元到店自提引流券，又反复提醒“不想下楼的邻居直接微信搜爱尚佳小程序，全店3000种蔬菜水果日用百货比外卖平台便宜15%，达达顺丰骑手半小时送到家”。',
+            deliverable: '4080 主机虚拟直播与短视频自动混剪流水线在家测试 100% 跑通'
+          }
+        ]
+      },
+
+      // ==================== 第二部分：接手后·门店物理落地期 ====================
+      {
+        stageId: 'S4',
+        phase: 'store',
+        phaseBadge: '🏪 接手后·进店实操 (带6员工+第三方骑手)',
+        stageTitle: '阶段四（接手第1周）：思迅 3000+ 全品打通、美团饿了么上线与骑手闪电取货台',
+        stagePeriod: 'Day 21 - Day 27',
+        stageDesc: '正式接手门店！导出思迅天店全量数据清洗上线，砍掉盲目周三 88 折，在门口设立第三方骑手 3 秒闪电取货台。',
+        nodes: [
+          {
+            id: '4.1',
+            title: '正式接手：导出思迅天店 3000+ 全品流水，一键同步“小程序+美团+饿了么”',
+            days: 'Day 21 - Day 23',
+            roles: ['leader', 'me', 'staff_fresh', 'cursor', 'agent'],
+            leaderCmd: '吞吐思迅天店近 3 个月全量收银流水，揪出周三 88 折亏本赚吆喝的出血商品，自动生成三端上架表（自有小程序全品低价 vs 美团饿了么高价防亏）。',
+            physicalActions: [
+              '【👤 我本人】：接手门店收银电脑，从思迅天店导出《全店商品档案与近90天流水.xlsx》丢进监听文件夹，审阅 AI 大领导发来的毛利诊断回执。',
+              '【👨‍🔧 员工3-4号(理货岗)】：配合盘点核对生鲜果蔬与高周转百货实际库存，剔除有库存记录但实际已破损的死库存。'
+            ],
+            onlineActions: [
+              { role: 'agent',  task: 'ai_leader_daemon.py 自动读取思迅 Excel 喂给 Gemini API，10秒内向总经理微信发送《毛利出血点诊断与3000+商品双轨定价表》。' },
+              { role: 'cursor', task: '运行导入脚本，将 3000+ 商品一键同步上架至自有全品类小程序、美团商家版与饿了么后台。' }
+            ],
+            prompt: '【进店第1天发给 AI大领导 (Gemini)】：这是我刚从门店思迅天店导出的全店3000款商品档案及过去一个月（含4个周三88折）的销售流水表。请帮我：1.算清周三88折到底亏在了哪20款刚需标品上；2.生成全店商品的小程序会员价与美团饿了么外卖防亏价。',
+            deliverable: '自有全品类小程序 + 美团闪购 + 饿了么超市 三端 3000+ 商品同步上线营业'
+          },
+          {
+            id: '4.2',
+            title: '卖场设“里侧顾客自提区” + “门口第三方骑手 3秒闪电取货台”',
+            days: 'Day 24 - Day 25',
+            roles: ['leader', 'me', 'staff_picker', 'cursor'],
+            leaderCmd: '严格分离动线：进店自提顾客往里走（穿过主通道带动连带消费）；美团/饿了么/顺丰/达达骑手在门口外侧取货（报号拎袋 3 秒即走，绝不堵塞收银台）。',
+            physicalActions: [
+              '【👤 我本人】：在超市出口靠门处设立 2 米长的【外卖与同城骑手闪电取货架】（按 #01~#20 编号），在卖场内侧设【邻居自提核销区】。',
+              '【📦 员工5-6号(店内拣货打包岗)】：熟悉小票打印机与手机 `/staff` 拣货台，明确自己只管店内拣货装袋放上取货架，绝不出店跑腿！'
+            ],
+            onlineActions: [
+              { role: 'cursor', task: '配置热敏小票打印模板：自动超大字号打印【#顺丰08 / #达达12 / #美团05】取货大号与商品核对条码。' }
+            ],
+            prompt: '【发给 AI大领导】：请为员工5号和6号生成一份贴在打包台墙上的《全品类订单8分钟极速拣货+塞洗客卡+呼叫顺丰/达达骑手标准操作卡》。',
+            deliverable: '门口骑手闪电取货台就绪，第三方骑手到店报号 3 秒拿袋即走'
+          },
+          {
+            id: '4.3',
+            title: '砍掉粗暴周三全场 88 折，全店货架铺设“用本店小程序买便宜 15%”爆炸贴',
+            days: 'Day 26 - Day 27',
+            roles: ['leader', 'me', 'staff_fresh', 'staff_cashier', 'grokbot'],
+            leaderCmd: '终结周三全场 88 折毛利失血！改为“每日早7点 AI 比价选 5 款民生爆品引流 + 全店 3000 款商品小程序常年比外卖平台便宜 15% + 会员日满额免骑手运费”。',
+            physicalActions: [
+              '【👤 我本人】：正式贴出公告升级会员福利，停止盲目全场打折。',
+              '【👨‍🔧 员工3-4号(理货岗)】：在粮油、水饮、日化、休闲零食货架挂满双价签爆炸贴（标明：美团外卖价 vs 本店小程序自提/送到家特惠价）。',
+              '【👩‍💼 员工1-2号(收银岗)】：对询问周三折扣的老客解释：“姐，现在不用苦等周三了！直接扫咱们小程序，天天都有5款批发生鲜价，而且买满额直接叫顺丰/达达骑手给您送到家门口！”'
+            ],
+            onlineActions: [
+              { role: 'grokbot', task: '每早 07:00 根据周边竞对价格与天气，生成今日 5 款引流民生品海报文案发入业主群。' }
+            ],
+            prompt: '【发给 Grokbot】：店里以前每周三搞全场88折导致毛利严重亏损，现在我们升级为“天天5款民生爆品底价 + 小程序全品类会员价 + 满额免费叫骑手送到家”。请帮我写一段贴在收银台和发在业主群里的《福利全面升级公告》，让老邻居觉得更划算而不是福利缩水。',
+            deliverable: '全店综合毛利率立即止血回升 +3%~4%，老客顺利过渡到小程序日常复购'
+          }
+        ]
+      },
+      {
+        stageId: 'S5',
+        phase: 'store',
+        phaseBadge: '🏪 接手后·进店实操 (带6员工+第三方骑手)',
+        stageTitle: '阶段五（接手第2~3周）：外卖包裹 100% 塞卡洗客、店员一键呼骑手、AI 社群全托管',
+        stagePeriod: 'Day 28 - Day 37',
+        stageDesc: '把美团/饿了么变成给小程序输血的免费奶牛！拣货员按 AI 最优货架路线 8 分钟打包并一键呼叫顺丰/达达骑手。',
+        nodes: [
+          {
+            id: '5.1',
+            title: '美团/饿了么包裹 100% 钉比价洗客卡 + 收银台截流 400 客流进小程序',
+            days: 'Day 28 - Day 31',
+            roles: ['leader', 'me', 'staff_cashier', 'staff_picker', 'agent'],
+            leaderCmd: '严格监控“公域洗私域转化率”：美团/饿了么每出 100 单，必须至少有 30 人扫码进咱们的小程序/企微群！按每成功拉新 1 人奖励员工 0.5 元自动计提奖金。',
+            physicalActions: [
+              '【📦 员工5-6号(打包岗)】：打包任何美团、饿了么订单时，必须往袋子里放一张《小程序便宜15%比价卡》，并在外卖小票旁再钉一张“扫码领首单免运费+送鸡蛋券”副券！',
+              '【👩‍💼 员工1-2号(收银岗)】：对每天进店结账的 400 位顾客口播引导：“扫台卡进咱们小区群/小程序，本单立减 2 元，以后全店 3000 种东西手机一点，骑手半小时给您送上楼！”'
+            ],
+            onlineActions: [
+              { role: 'agent', task: '通过带渠道参数的活码，自动区分是“收银员1-2号面对面拉新”还是“打包员5-6号外卖塞卡拉新”，自动发放小程序全品类新人券包并记入对应员工绩效。' }
+            ],
+            prompt: '【发给 AI大领导】：这是本周美团/饿了么出单量（350单）与通过外卖包裹卡扫码进入我们小程序下单的新客统计（112人），请核算打包员5-6号与收银员1-2号的拉新奖金，并分析哪类外卖顾客最容易被转化到小程序？',
+            deliverable: '每天从线下 400 客流 + 美团饿了么外卖单中稳定洗入 60~80 位本小区小程序新用户'
+          },
+          {
+            id: '5.2',
+            title: '拣货员 5-6 号按“AI 最优货架路线”极速打包 + 手机点【呼叫骑手】实跑',
+            days: 'Day 32 - Day 34',
+            roles: ['leader', 'staff_picker', 'cursor', 'agent'],
+            leaderCmd: '3000+ 全品类超市最怕店员找货慢！AI 根据商品所在货架编号（1号生鲜区 ➔ 2号冷藏柜 ➔ 3号粮油区 ➔ 4号日百区）自动排序拣货单，让店员不走回头路 6 分钟内拣齐一单。',
+            physicalActions: [
+              '【📦 员工5-6号(打包岗)】：手机收到新订单语音播报 ➔ 看着 `/staff` 手机页（商品已按 1~8 号货架顺路排好）推小车一趟拣齐 ➔ 扫码复核防漏装 ➔ 放上门口取货架并点手机大按钮 **【打包完成·呼叫第三方骑手】**。'
+            ],
+            onlineActions: [
+              { role: 'cursor', task: '在 /staff 拣货页实现按 shelf_code（货架号）自动升序排列商品，并提供一键调用顺丰同城/达达/蜂鸟比价发单接口。' },
+              { role: 'agent',  task: '监控骑手接单状态：若下雨天超过 3 分钟无骑手接单，AI 自动加价 2 元小费重发，并向顾客微信推送“骑手已接单正在赶往超市”实时地图轨迹。' }
+            ],
+            prompt: '【发给 Cursor (Ask模式)】：请优化员工手机端 /staff 的拣货列表接口：当一笔全品类订单包含15件不同商品时，自动按照 products 表中的 shelf_zone（货架分区编号 A01~H20）升序排列展示，让店员从超市里侧向门口单向走一趟即可全部拿齐，并在底部放置醒目的【打包完成·一键比价呼叫顺丰/达达骑手】按钮。',
+            deliverable: '全品类 15 件商品大单店员 6 分钟内拣齐，第三方骑手平均 25 分钟送达顾客家门'
+          },
+          {
+            id: '5.3',
+            title: '理货员早拍视频/晚拍剩菜触发 AI 日清 + 15元内坏果秒赔 + 3000品智能导购',
+            days: 'Day 35 - Day 37',
+            roles: ['leader', 'staff_cashier', 'staff_fresh', 'grokbot', 'agent'],
+            leaderCmd: '全面接管微信群全品类导购、晚间生鲜零损耗日清与小额坏果视觉秒赔。',
+            physicalActions: [
+              '【👨‍🔧 员工3-4号(理货岗)】：早开箱拿手机随手拍 3 段 5 秒水果/肉类视频发内部群；每晚 20:00 拍没卖完的叶菜/鲜奶/熟食发群，语音说一句剩余数量（如“菠菜剩10把、烤鸡剩3只”）。',
+              '【👩‍💼 员工1-2号(收银岗)】：顾客到店自提时输 6 位码 1 秒核销；仅处理 >15 元的大额售后弹窗。'
+            ],
+            onlineActions: [
+              { role: 'agent',   task: '社群 @小助手 挂载全店 3000+ 商品库：邻居在群里问“店里有某牌酱油/5号电池/猫砂吗？”，Agent 3 秒内查库回复现价并甩出小程序链接，下单直接叫骑手送！' },
+              { role: 'grokbot', task: '晚 20:00 收到理货员尾货语音后，自动将小程序对应商品改价 6 折并生成“老王店长晚间日清捡漏”推文发进所有业主群。' }
+            ],
+            prompt: '【业主群邻居提问】：“@爱尚佳小助手 家里没盐和洗洁精了，再带两盒纯牛奶和一斤排骨，店里都有吗？能现在送过来吗？”\n【AI Agent 自动查3000品库秒回】：“姐都有现货！中盐2元+立白洗洁精6.9元+特仑苏2盒+新鲜前排19.8元，合计48.5元已帮您生成一键加购清单👉[点此小程序直接付款]，满39元免基础运费，您付款后店员5分钟打包好交达达骑手，约25分钟送到您家门口！”',
+            deliverable: '群内 3000+ 全品类询价 3 秒自动成交，晚间生鲜日清损耗率砍半'
+          }
+        ]
+      },
+      {
+        stageId: 'S6',
+        phase: 'store',
+        phaseBadge: '🏪 接手后·进店实操 (带6员工+第三方骑手)',
+        stageTitle: '阶段六（接手第4周起）：24h 虚拟直播白嫖公域、AI 凑单提客单与每晚 22:00 扭亏复盘',
+        stagePeriod: 'Day 38 - Day 45',
+        stageDesc: '用 AI 凑单把小程序客单价从 25 元拉升到 50 元+（彻底摊薄第三方骑手运费），每晚 22:00 由 AI 大领导出全渠道扭亏日报。',
+        nodes: [
+          {
+            id: '6.1',
+            title: '门店开启 24h 虚拟店长直播 + 每日 3 条混剪短视频白嫖同城流量',
+            days: 'Day 38 - Day 40',
+            roles: ['leader', 'me', 'staff_fresh', 'staff_cashier', 'agent'],
+            leaderCmd: '用 4080 主机 24h 直播洗抖音/视频号周边 3 公里流量，到店核销或外卖下单后一律洗入自有全品类小程序。',
+            physicalActions: [
+              '【👨‍🔧 员工3-4号】：拍一段 10 分钟门店整洁货架实景视频替换进 4080 直播间背景。',
+              '【👩‍💼 员工2号(收银岗)】：每天把 AI 群里自动剪好的 3 条 15 秒短视频点发布，挂载门店团购与定位。'
+            ],
+            onlineActions: [
+              { role: 'agent', task: '24 小时数字人循环播报爆品与“微信搜爱尚佳小程序全店3000种商品骑手送到家”，自动语音回复公屏弹幕。' }
+            ],
+            prompt: '【发给 AI大领导】：请统计本周通过抖音24h虚拟直播间与同城短视频引流到店及转入小程序的客户数。',
+            deliverable: '抖音/视频号同城曝光每日破万，零人工主播成本持续吸血公域'
+          },
+          {
+            id: '6.2',
+            title: '小程序“AI 购物车智能凑单 + 整箱多规格”把客单价从 25元 拉升至 50元+',
+            days: 'Day 41 - Day 43',
+            roles: ['leader', 'me', 'staff_picker', 'cursor', 'agent'],
+            leaderCmd: '算清骑手运费账：叫一次顺丰/达达骑手固定要花约 5 元；如果顾客只买 20 元东西，运费占 25% 会亏本；只要用 AI 凑单把配送单客单价拉升到 50~60 元，门店补贴 3 元运费仅占 5%，净毛利稳拿 18%+！',
+            physicalActions: [
+              '【👤 我本人】：设置配送门槛阶梯（到店自提 0 门槛且送 2 元券；第三方骑手送上门：满 39 元门店补贴基础运费、满 69 元全免运费）。',
+              '【📦 员工5-6号(打包岗)】：对大客单/整箱水奶订单使用加厚袋打包，方便第三方骑手电动车踏板装载。'
+            ],
+            onlineActions: [
+              { role: 'cursor', task: '在小程序购物车结算栏开发 AI 动态凑单推荐条：“还差 8.5 元即可免骑手配送费，90%邻居顺手加了【3.5元金针菇 / 5.9元抽纸 / 9.9元鲜鸡蛋】”。' }
+            ],
+            prompt: '【发给 Cursor (Ask模式)】：请在小程序购物车页面增加一个智能凑单推荐模块：当用户选择了“送货上门”且当前购物车金额处于 25元~68元 之间时，自动从全品类库中检索价格恰好等于（免运门槛 - 当前金额 + 2元）的高毛利高频日百/生鲜单品展示在购物车底部，支持一键点击“+凑单免运费”。',
+            deliverable: '小程序配送单平均客单价突破 52 元，第三方骑手运费占比压降至 6% 以内'
+          },
+          {
+            id: '6.3',
+            title: '每晚 22:00 AI 大领导生成《全渠道扭亏日报（小程序 vs 美团饿了么 vs 线下）》',
+            days: 'Day 44 - Day 45 (常态化)',
+            roles: ['leader', 'me', 'github', 'agent'],
+            leaderCmd: '每晚 22:00 自动汇总四本账：① 思迅天店线下收银流水、② 自有全品类小程序订单、③ 美团/饿了么账单、④ 顺丰/达达第三方骑手运费账单，出具《今日净毛利、公域洗客率、骑手运费占比与6员工绩效日报》。',
+            physicalActions: [
+              '【👤 我本人】：每晚 22:00 在手机微信上看一眼 AI 大领导发来的全店日报，在员工群给今日“拉新冠军/极速打包王”发红包，每周点顶部【☁️ 复制同步口令】归档云端。'
+            ],
+            onlineActions: [
+              { role: 'agent',  task: 'ai_leader_daemon.py 每晚 21:55 自动读取各端报表调用 Gemini API 生成日报推送到总经理微信。' },
+              { role: 'github', task: '自动备份全店数据库与 3000+ 商品动销权重。' }
+            ],
+            prompt: '【每晚 22:00 自动发给 AI大领导 (Gemini API)】：以下是今日思迅天店流水、小程序全品类订单、美团饿了么导出单及达达/顺丰骑手扣费明细。请生成《爱尚佳超市今日经营与扭亏日报》：1.全店总营收（对比接手前1万元基准线）与真实净毛利额；2.美团饿了么洗客进小程序转化率；3.第三方骑手单均运费占比；4.员工1-6号今日绩效得分与明日3000品库存补货/汰换指令。',
+            deliverable: '60天内将门店日均营业额从 1.0 万推升至 1.6 万~1.8 万，净毛利率稳居 20%+ 全面扭亏为盈'
+          }
+        ]
+      }
+    ];
+
+    let appState = {
+      completed: { '1.1': true },
+      notes: {},
+      completedAt: { '1.1': '2026/10/16' },
+      roleFilter: 'all',
+      phaseFilter: 'all'
+    };
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          appState.completed = parsed.completed || { '1.1': true };
+          appState.notes = parsed.notes || {};
+          appState.completedAt = parsed.completedAt || { '1.1': '2026/10/16' };
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        completed: appState.completed,
+        notes: appState.notes,
+        completedAt: appState.completedAt
+      }));
+      const now = new Date().toLocaleTimeString('zh-CN', { hour12: false });
+      document.getElementById('lastSavedText').textContent = `已自动保存 (${now})`;
+      updateProgressBar();
+    }
+
+    function toggleNode(nodeId) {
+      if (appState.completed[nodeId]) {
+        delete appState.completed[nodeId];
+        delete appState.completedAt[nodeId];
+        showToast(`已取消标记 节点 ${nodeId}`);
+      } else {
+        appState.completed[nodeId] = true;
+        appState.completedAt[nodeId] = new Date().toLocaleDateString('zh-CN');
+        showToast(`✅ 节点 ${nodeId} 已完成！`);
+      }
+      saveState();
+      renderRoadmap();
+    }
+
+    function updateNote(nodeId, val) {
+      appState.notes[nodeId] = val;
+      saveState();
+    }
+
+    function setRoleFilter(role) {
+      appState.roleFilter = role;
+      appState.phaseFilter = 'all';
+      highlightFilterBtn(role);
+      renderRoadmap();
+    }
+
+    function setPhaseFilter(phase) {
+      appState.phaseFilter = phase;
+      appState.roleFilter = 'all';
+      highlightFilterBtn('phase_' + phase);
+      renderRoadmap();
+    }
+
+    function highlightFilterBtn(activeKey) {
+      document.querySelectorAll('.role-btn').forEach(btn => {
+        if (btn.dataset.role === activeKey) {
+          btn.classList.add('ring-2', 'ring-sky-400', 'bg-sky-600', 'text-white');
+        } else {
+          btn.classList.remove('ring-2', 'ring-sky-400', 'bg-sky-600', 'text-white');
+        }
+      });
+    }
+
+    function updateProgressBar() {
+      let total = 0, done = 0;
+      STAGES_DATA.forEach(s => s.nodes.forEach(n => {
+        total++;
+        if (appState.completed[n.id]) done++;
+      }));
+      const pct = total ? Math.round((done / total) * 100) : 0;
+      document.getElementById('progressText').textContent = `已完成 ${done} / ${total} 个核心节点 (${pct}%)`;
+      document.getElementById('progressBar').style.width = `${pct}%`;
+    }
+
+    function toggleSection(bodyId, btnId) {
+      const el = document.getElementById(bodyId);
+      const btn = document.getElementById(btnId);
+      if (el.classList.contains('hidden')) {
+        el.classList.remove('hidden');
+        btn.textContent = '收起 ▲';
+      } else {
+        el.classList.add('hidden');
+        btn.textContent = '展开 ▼';
+      }
+    }
+
+    function copyText(text, label) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast(`📋 已复制 ${label}！`);
+      });
+    }
+
+    function copyCloudSyncCommand() {
+      const doneList = [], todoList = [], notesList = [];
+      STAGES_DATA.forEach(s => s.nodes.forEach(n => {
+        if (appState.completed[n.id]) {
+          doneList.push(`- [x] 节点 ${n.id}：${n.title} (${appState.completedAt[n.id] || '已完成'})`);
+        } else {
+          todoList.push(`- [ ] 节点 ${n.id}：${n.title}`);
+        }
+        if (appState.notes[n.id] && appState.notes[n.id].trim()) {
+          notesList.push(`  * 节点 ${n.id} 备注：${appState.notes[n.id].trim()}`);
+        }
+      }));
+
+      const cmd = [
+        `【V4.0 向 AI 大领导 (Gemini) 汇报最新进度】`,
+        `当前战略：接手前远程先行 + 3000+全品类0扣点小程序 + 美团饿了么公域洗客 + 全接入第三方骑手`,
+        `✅ 已完成节点 (${doneList.length}/18)：`,
+        doneList.join('\n') || '  (暂无)',
+        `📝 备注记录：`,
+        notesList.join('\n') || '  (暂无备注)',
+        `⏳ 下一步待推进远程/门店节点：`,
+        todoList.slice(0, 4).join('\n')
+      ].join('\n');
+
+      copyText(cmd, 'V4.0 云端汇报口令');
+    }
+
+    function exportProgressJSON() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
+      const a = document.createElement('a');
+      a.href = dataStr;
+      a.download = `aishangjia_v4_progress_${new Date().toISOString().slice(0,10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      showToast('💾 V4.0 进度 JSON 已导出！');
+    }
+
+    function importProgressJSON(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        try {
+          const parsed = JSON.parse(ev.target.result);
+          appState.completed = parsed.completed || {};
+          appState.notes = parsed.notes || {};
+          appState.completedAt = parsed.completedAt || {};
+          saveState();
+          renderRoadmap();
+          showToast('📂 进度导入成功！');
+        } catch (err) {
+          alert('文件格式错误');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function resetAllProgress() {
+      if (confirm('确定重置进度吗？（节点 1.1 将保留完成状态）')) {
+        appState.completed = { '1.1': true };
+        appState.notes = {};
+        appState.completedAt = { '1.1': '2026/10/16' };
+        saveState();
+        renderRoadmap();
+        showToast('已重置进度');
+      }
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.remove('hidden');
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => t.classList.add('hidden'), 2500);
+    }
+
+    function renderRoadmap() {
+      const container = document.getElementById('roadmapContainer');
+      const statusFilter = document.getElementById('statusFilter').value;
+      const kw = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+      const roleFilter = appState.roleFilter;
+      const phaseFilter = appState.phaseFilter;
+
+      let html = '';
+
+      STAGES_DATA.forEach(stage => {
+        if (phaseFilter !== 'all' && stage.phase !== phaseFilter) return;
+
+        const filtered = stage.nodes.filter(node => {
+          const isDone = !!appState.completed[node.id];
+          if (statusFilter === 'done' && !isDone) return false;
+          if (statusFilter === 'todo' && isDone) return false;
+          if (roleFilter !== 'all' && !node.roles.includes(roleFilter)) return false;
+          if (kw) {
+            const text = [
+              node.id, node.title, node.leaderCmd,
+              ...node.physicalActions, ...node.onlineActions.map(a => a.task),
+              node.prompt, node.deliverable, appState.notes[node.id] || ''
+            ].join(' ').toLowerCase();
+            if (!text.includes(kw)) return false;
+          }
+          return true;
+        });
+
+        if (!filtered.length) return;
+
+        const doneCount = stage.nodes.filter(n => !!appState.completed[n.id]).length;
+        const isRemote = stage.phase === 'remote';
+
+        html += `
+          <div class="bg-slate-900/80 border-2 ${isRemote ? 'border-rose-500/40' : 'border-emerald-500/40'} rounded-2xl p-4 sm:p-5 shadow-xl">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3.5 border-b border-slate-800">
+              <div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="px-2.5 py-0.5 text-xs font-black rounded ${isRemote ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40' : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'}">
+                    ${stage.phaseBadge}
+                  </span>
+                  <span class="px-2 py-0.5 text-xs font-mono font-bold rounded bg-slate-800 text-sky-300">${stage.stagePeriod}</span>
+                  <h3 class="text-base sm:text-lg font-extrabold text-white">${stage.stageTitle}</h3>
+                </div>
+                <p class="text-xs text-slate-400 mt-1">${stage.stageDesc}</p>
+              </div>
+              <div class="text-xs font-bold px-3 py-1 rounded-lg bg-slate-800 text-emerald-400 self-start sm:self-center shrink-0">
+                本阶段：${doneCount} / ${stage.nodes.length}
+              </div>
+            </div>
+
+            <div class="mt-4 space-y-5">
+              ${filtered.map(n => renderNodeCard(n)).join('')}
+            </div>
+          </div>
+        `;
+      });
+
+      if (!html) {
+        html = `<div class="text-center py-14 text-slate-400 bg-slate-900/50 rounded-2xl border border-slate-800">
+          当前筛选下无匹配节点，请点击【全部18节点】恢复。
+        </div>`;
+      }
+
+      container.innerHTML = html;
+    }
+
+    function renderNodeCard(node) {
+      const isDone = !!appState.completed[node.id];
+      const doneDate = appState.completedAt[node.id] || '';
+      const noteVal = (appState.notes[node.id] || '').replace(/"/g, '&quot;');
+      const escapedPrompt = node.prompt.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$');
+
+      const badges = node.roles.map(r => {
+        const m = ROLE_META[r];
+        return m ? `<span class="px-2 py-0.5 text-[11px] font-semibold rounded border ${m.badge}">${m.label}</span>` : '';
+      }).join('');
+
+      return `
+        <div class="node-card rounded-xl border border-slate-700/80 bg-slate-800/60 p-4 sm:p-5 ${isDone ? 'node-done' : ''}">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-2.5 pb-3 border-b border-slate-700/60">
+            <div class="flex items-start sm:items-center gap-3">
+              <button
+                onclick="toggleNode('${node.id}')"
+                class="mt-0.5 sm:mt-0 w-7 h-7 rounded-lg flex items-center justify-center border-2 shrink-0 transition ${
+                  isDone
+                    ? 'bg-emerald-500 border-emerald-400 text-slate-950 font-black shadow-lg shadow-emerald-500/30'
+                    : 'bg-slate-900 border-slate-500 hover:border-emerald-400 text-transparent'
+                }"
+              >✓</button>
+              <div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="px-2 py-0.5 text-xs font-mono font-bold rounded bg-slate-700 text-sky-300">节点 ${node.id}</span>
+                  <span class="text-xs text-slate-400 font-mono">${node.days}</span>
+                  <h4 class="text-sm sm:text-base font-extrabold ${isDone ? 'line-through text-emerald-300' : 'text-white'}">${node.title}</h4>
+                  ${isDone ? `<span class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">✅ 已完成 (\${doneDate})</span>` : ''}
+                </div>
+              </div>
+            </div>
+            <div class="flex flex-wrap gap-1">${badges}</div>
+          </div>
+
+          <!-- 第一栏：👑 AI 大领导 (Gemini) 指令 -->
+          <div class="mt-3 bg-indigo-950/35 border border-indigo-500/40 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div class="text-xs leading-relaxed">
+              <span class="font-extrabold text-indigo-300">👑 AI 大领导 (Gemini) 统筹指令：</span>
+              <span class="text-slate-200">${node.leaderCmd}</span>
+            </div>
+            <button
+              onclick="copyText(\`\${escapedPrompt}\`, '节点 ${node.id} AI指令/提示词')"
+              class="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-bold shrink-0 self-start sm:self-center shadow transition"
+            >
+              📋 复制本节点 AI 提示词
+            </button>
+          </div>
+
+          <!-- 第二栏：左栏【我+6员工】 vs 右栏【线上Agent+第三方骑手】 -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-3.5 mt-3.5">
+            <div class="bg-amber-950/20 border border-amber-500/30 rounded-xl p-3.5">
+              <div class="text-xs font-extrabold text-amber-300 mb-2 flex items-center justify-between">
+                <span>👥 我本人 + 门店 6 员工动作（店员只拣货打包，绝不出门送货）</span>
+              </div>
+              <ul class="space-y-2 text-xs text-slate-200 leading-relaxed">
+                ${node.physicalActions.map(act => `<li class="bg-slate-900/60 p-2 rounded-lg border border-slate-700/50">\${act}</li>`).join('')}
+              </ul>
+            </div>
+
+            <div class="bg-sky-950/20 border border-sky-500/30 rounded-xl p-3.5 flex flex-col justify-between">
+              <div>
+                <div class="text-xs font-extrabold text-sky-300 mb-2 flex items-center justify-between">
+                  <span>🤖 线上 Agent 矩阵（Cursor / 爬虫 / Grokbot / 骑手API）</span>
+                </div>
+                <div class="space-y-2 text-xs leading-relaxed">
+                  ${node.onlineActions.map(ai => {
+                    const m = ROLE_META[ai.role] || { label: ai.role, badge: 'bg-slate-700 text-white' };
+                    return `<div class="flex items-start gap-2 bg-slate-900/60 p-2.5 rounded-lg border border-slate-700/60">
+                      <span class="shrink-0 px-1.5 py-0.5 text-[11px] font-bold rounded border ${m.badge}">${m.label}</span>
+                      <span class="text-slate-200">\${ai.task}</span>
+                    </div>`;
+                  }).join('')}
+                </div>
+              </div>
+              <div class="mt-2.5 pt-2 border-t border-slate-700/60 text-[11px] text-slate-400 font-mono truncate" title="${node.prompt.replace(/"/g, '&quot;')}">
+                💡 提示词预览：${node.prompt}
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-3.5 pt-3 border-t border-slate-700/50 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs">
+            <div class="text-emerald-300 font-medium">
+              🎯 <b>验收标准：</b><span class="text-slate-200">${node.deliverable}</span>
+            </div>
+            <div class="flex items-center gap-2 w-full sm:w-80">
+              <span class="text-slate-400 shrink-0">📝 备注:</span>
+              <input
+                type="text"
+                value="${noteVal}"
+                oninput="updateNote('${node.id}', this.value)"
+                placeholder="记录远程开发/门店实操进展..."
+                class="w-full bg-slate-900/90 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-slate-200 focus:outline-none focus:border-emerald-400"
+              />
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    loadState();
+    updateProgressBar();
     renderRoadmap();
   </script>
 </body>
